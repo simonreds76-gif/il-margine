@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-11-22T15:14:52Z
+generated_at_utc: 2026-11-27T17:26:05Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,60 +8,60 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 705
-role_players_loaded: 777
+raw_odds_rows_loaded: 2298
+role_players_loaded: 790
 
 Join
-shadow_rows_assist_only: 705
-role_matched_rows: 242
-role_match_rate_pct: 34.33
-ambiguous_player_rows: 0
-unmatched_player_rows: 463
+shadow_rows_assist_only: 2298
+role_matched_rows: 795
+role_match_rate_pct: 34.60
+ambiguous_player_rows: 2
+unmatched_player_rows: 1501
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Giacomo Calo | AC Milan vs Frosinone Calcio | odds 3.7500 | setpiece_last5 89.13 | corners_last5 91.18 | fk_last5 81.82
- - Giacomo Calò | AC Milan vs Frosinone Calcio | odds 4.7000 | setpiece_last5 89.13 | corners_last5 91.18 | fk_last5 81.82
- - Hakan Calhanoglu | Atalanta BC vs Inter Milano | odds 3.3000 | setpiece_last5 66.67 | corners_last5 68.97 | fk_last5 66.67
- - Hakan Çalhanoglu | Atalanta BC vs Inter Milano | odds 4.1000 | setpiece_last5 66.67 | corners_last5 68.97 | fk_last5 66.67
- - Mathias Jensen | Brentford FC vs Everton FC | odds 4.5000 | setpiece_last5 65.22 | corners_last5 66.67 | fk_last5 62.5
- - Mathias Jensen | Brentford FC vs Everton FC | odds 5.8000 | setpiece_last5 65.22 | corners_last5 66.67 | fk_last5 62.5
- - Sergio Gomez | Racing Santander vs Real Sociedad San Sebastian | odds 4.0000 | setpiece_last5 57.89 | corners_last5 46.15 | fk_last5 83.33
- - Pablo Martinez | CA Osasuna vs Malaga CF | odds 5.5000 | setpiece_last5 56.67 | corners_last5 60.0 | fk_last5 50.0
- - Pablo Martínez | CA Osasuna vs Malaga CF | odds 5.7500 | setpiece_last5 56.67 | corners_last5 60.0 | fk_last5 50.0
- - Lucas Bretelle | Olympique Marseille vs Le Mans FC | odds 7.5000 | setpiece_last5 56.52 | corners_last5 53.85 | fk_last5 60.0
- - Miro Muheim | Werder Bremen vs Hamburger SV | odds 6.5000 | setpiece_last5 53.33 | corners_last5 61.11 | fk_last5 41.67
- - Miro Muheim | Werder Bremen vs Hamburger SV | odds 5.5000 | setpiece_last5 53.33 | corners_last5 61.11 | fk_last5 41.67
- - Kiernan Dewsbury-Hall | Brentford FC vs Everton FC | odds 4.5000 | setpiece_last5 52.0 | corners_last5 52.94 | fk_last5 50.0
- - Kiernan Dewsbury-Hall | Brentford FC vs Everton FC | odds 4.7000 | setpiece_last5 52.0 | corners_last5 52.94 | fk_last5 50.0
- - Ruben Garcia | CA Osasuna vs Malaga CF | odds 3.6000 | setpiece_last5 51.72 | corners_last5 55.0 | fk_last5 50.0
- - Rubén García | CA Osasuna vs Malaga CF | odds 3.8000 | setpiece_last5 51.72 | corners_last5 55.0 | fk_last5 50.0
- - Davide Bartesaghi | AC Milan vs Frosinone Calcio | odds 4.0000 | setpiece_last5 50.0 | corners_last5 60.0 | fk_last5 25.0
- - Davide Bartesaghi | AC Milan vs Frosinone Calcio | odds 4.8000 | setpiece_last5 50.0 | corners_last5 60.0 | fk_last5 25.0
- - Amine Harit | Olympique Marseille vs Le Mans FC | odds 3.1000 | setpiece_last5 50.0 | corners_last5 56.25 | fk_last5 33.33
- - Amine Harit | Olympique Marseille vs Le Mans FC | odds 3.1000 | setpiece_last5 50.0 | corners_last5 56.25 | fk_last5 33.33
+ - Romain Faivre | AJ Auxerre vs Olympique Marseille | odds 5.5000 | setpiece_last5 100.0 | corners_last5 100.0 | fk_last5 100.0
+ - Fares Chaibi | VfB Stuttgart vs Eintracht Frankfurt | odds 4.2000 | setpiece_last5 96.43 | corners_last5 100.0 | fk_last5 100.0
+ - Fares Chaibi | VfB Stuttgart vs Eintracht Frankfurt | odds 4.6000 | setpiece_last5 96.43 | corners_last5 100.0 | fk_last5 100.0
+ - Florian Thauvin | Angers SCO vs Racing Club De Lens | odds 3.8000 | setpiece_last5 96.43 | corners_last5 95.45 | fk_last5 100.0
+ - Nadiem Amiri | FSV Mainz vs Union Berlin | odds 3.5000 | setpiece_last5 95.45 | corners_last5 92.31 | fk_last5 100.0
+ - Giacomo Calo | Frosinone Calcio vs Parma Calcio | odds 2.3000 | setpiece_last5 93.18 | corners_last5 94.12 | fk_last5 88.89
+ - Giacomo Calò | Frosinone Calcio vs Parma Calcio | odds 3.0000 | setpiece_last5 93.18 | corners_last5 94.12 | fk_last5 88.89
+ - David Raum | SC Freiburg vs RB Leipzig | odds 4.1000 | setpiece_last5 90.0 | corners_last5 100.0 | fk_last5 90.0
+ - Borna Sosa | 1. FC Cologne vs SV 07 Elversberg | odds 5.8000 | setpiece_last5 84.0 | corners_last5 78.57 | fk_last5 90.91
+ - Alex Berenguer | Malaga CF vs Athletic Bilbao | odds 3.6000 | setpiece_last5 83.33 | corners_last5 78.95 | fk_last5 90.0
+ - Alex Berenguer | Malaga CF vs Athletic Bilbao | odds 3.3000 | setpiece_last5 83.33 | corners_last5 78.95 | fk_last5 90.0
+ - Felix Keidel | 1. FC Cologne vs SV 07 Elversberg | odds 9.5000 | setpiece_last5 82.14 | corners_last5 94.12 | fk_last5 77.78
+ - Aleix Garcia | Borussia Dortmund vs Bayer Leverkusen | odds 5.2000 | setpiece_last5 81.58 | corners_last5 89.66 | fk_last5 55.56
+ - Bruno Fernandes | Manchester United vs Brentford FC | odds 2.5000 | setpiece_last5 79.31 | corners_last5 71.43 | fk_last5 100.0
+ - Bruno Fernandes | Manchester United vs Brentford FC | odds 3.0000 | setpiece_last5 79.31 | corners_last5 71.43 | fk_last5 100.0
+ - Javi Guerra | Valencia CF vs CA Osasuna | odds 4.2000 | setpiece_last5 78.26 | corners_last5 82.35 | fk_last5 80.0
+ - Javi Guerra | Valencia CF vs CA Osasuna | odds 4.8000 | setpiece_last5 78.26 | corners_last5 82.35 | fk_last5 80.0
+ - Pablo Pagis | Stade Brest 29 vs Paris FC | odds 3.9000 | setpiece_last5 76.67 | corners_last5 84.21 | fk_last5 70.0
+ - Dominik Szoboszlai | Everton FC vs Liverpool FC | odds 3.7500 | setpiece_last5 76.6 | corners_last5 75.68 | fk_last5 80.0
+ - Dominik Szoboszlai | Everton FC vs Liverpool FC | odds 4.0000 | setpiece_last5 76.6 | corners_last5 75.68 | fk_last5 80.0
 
 Unmatched sample
- - Adrien Rabiot | AC Milan vs Frosinone Calcio
- - Aleksa Terzic | AC Milan vs Frosinone Calcio
- - Alessio Zerbin | AC Milan vs Frosinone Calcio
- - Anouar El Azzouzi | AC Milan vs Frosinone Calcio
- - Anthony Oyono | AC Milan vs Frosinone Calcio
- - Ardon Jashari | AC Milan vs Frosinone Calcio
- - Daniel Birligea | AC Milan vs Frosinone Calcio
- - Enzo Tchato Mbiayi | AC Milan vs Frosinone Calcio
- - Fares Ghedjemis | AC Milan vs Frosinone Calcio
- - Fikayo Tomori | AC Milan vs Frosinone Calcio
- - Filippo Terracciano | AC Milan vs Frosinone Calcio
- - Florian Grillitsch | AC Milan vs Frosinone Calcio
- - Francesco Camarda | AC Milan vs Frosinone Calcio
- - Gabriele Calvani | AC Milan vs Frosinone Calcio
- - Giorgio Cittadini | AC Milan vs Frosinone Calcio
- - Ilario Monterisi | AC Milan vs Frosinone Calcio
- - Kevin John Ufuoma Akpoguma | AC Milan vs Frosinone Calcio
- - Koni De Winter | AC Milan vs Frosinone Calcio
- - Mario Gila | AC Milan vs Frosinone Calcio
- - Matteo Cichella | AC Milan vs Frosinone Calcio
+ - Akor Adams | Venezia FC vs Bologna FC
+ - Albion Rrahmani | Venezia FC vs Bologna FC
+ - Alfred Duncan | Venezia FC vs Bologna FC
+ - Antoine Hainaut | Venezia FC vs Bologna FC
+ - Armel Bella-Kotchap | Venezia FC vs Bologna FC
+ - Artem Dovbyk | Venezia FC vs Bologna FC
+ - Arthur Theate | Venezia FC vs Bologna FC
+ - Eivind Helland | Venezia FC vs Bologna FC
+ - Jens Odgaard | Venezia FC vs Bologna FC
+ - Joel Schingtienne | Venezia FC vs Bologna FC
+ - Juan Jesus | Venezia FC vs Bologna FC
+ - Kornel Lisman | Venezia FC vs Bologna FC
+ - Lamine Fanne | Venezia FC vs Bologna FC
+ - Lion Lauberbach | Venezia FC vs Bologna FC
+ - Martin Vitik | Venezia FC vs Bologna FC
+ - Matias Moreno | Venezia FC vs Bologna FC
+ - Matteo Darmian | Venezia FC vs Bologna FC
+ - Mikel Amondarain | Venezia FC vs Bologna FC
+ - Nadir Zortea | Venezia FC vs Bologna FC
+ - Nicolo Cambiaghi | Venezia FC vs Bologna FC

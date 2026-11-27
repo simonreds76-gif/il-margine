@@ -1,376 +1,987 @@
 event_id,kickoff_at,bookmaker,league,home_team,away_team,market_name,is_assist_candidate,odds_count,sample_labels
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,ML,false,1,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Draw No Bet,false,1,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Double Chance,false,1,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Spread,false,6,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Totals,false,9,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Both Teams To Score,false,1,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,ML HT,false,1,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Totals HT,false,4,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,European Handicap,false,4,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,11,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Bookings Totals,false,7,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,43,Adrien Rabiot | Aleksa Terzic | Alessio Zerbin | Alphadjo Cisse | Anouar El Azzouzi | Anthony Oyono | Ardon Jashari | Christian Comotto
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,First Goalscorer,false,43,Adrien Rabiot | Aleksa Terzic | Alessio Zerbin | Alphadjo Cisse | Anouar El Azzouzi | Anthony Oyono | Ardon Jashari | Christian Comotto
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Player Fouls,false,119,Adrien Rabiot | Adrien Rabiot | Adrien Rabiot | Aleksa Terzic | Aleksa Terzic | Aleksa Terzic | Alessio Zerbin | Alessio Zerbin
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Player Shots,false,187,Adrien Rabiot | Adrien Rabiot | Adrien Rabiot | Adrien Rabiot | Adrien Rabiot | Adrien Rabiot | Aleksa Terzic | Aleksa Terzic
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Player To Assist,true,40,Adrien Rabiot | Aleksa Terzic | Alessio Zerbin | Alphadjo Cisse | Anouar El Azzouzi | Anthony Oyono | Ardon Jashari | Christian Pulisic
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Bookings Totals Away,false,5,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Away,false,6,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Player To Score or Assist,true,40,Adrien Rabiot | Aleksa Terzic | Alessio Zerbin | Alphadjo Cisse | Anouar El Azzouzi | Anthony Oyono | Ardon Jashari | Christian Pulisic
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Player to be Booked,false,40,Adrien Rabiot | Aleksa Terzic | Alessio Zerbin | Alphadjo Cisse | Anouar El Azzouzi | Anthony Oyono | Ardon Jashari | Christian Pulisic
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Home,false,9,
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Player To Be Fouled,false,120,Adrien Rabiot | Adrien Rabiot | Adrien Rabiot | Aleksa Terzic | Aleksa Terzic | Aleksa Terzic | Alessio Zerbin | Alessio Zerbin
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Player Shots on Target,false,97,Adrien Rabiot | Adrien Rabiot | Adrien Rabiot | Aleksa Terzic | Aleksa Terzic | Alessio Zerbin | Alessio Zerbin | Alessio Zerbin
-71945416,2026-11-22T17:00:00Z,Paddy Power,Italy - Serie A,AC Milan,Frosinone Calcio,Bookings Totals Home,false,4,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Sankhoun Diawara
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Daniel Birligea
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Anthony Oyono
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Koni De Winter
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Luka Modric
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Alphadjo Cissè
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Giorgio Cittadini
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Diego Moreira
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Alphadjo Cissè
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Ardon Jashari
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Christian Pulisic
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Matteo Cichella
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Davide Bartesaghi
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Patrizio Masini
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Strahinja Pavlovic
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Anthony Oyono
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Sankhoun Diawara
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Adrien Rabiot
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Farès Ghedjemis
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Gonçalo Ramos
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,ML,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Mario Gila
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Omari Hutchinson
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Daniel Birligea
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Giacomo Calò
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Gonçalo Ramos
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Aleksa Terzic
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Filippo Terracciano
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Giorgi Kvernadze
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Diego Moreira
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Mario Gila
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Pervis Estupiñán
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Yunus Musah
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Romano Schmid
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Omari Hutchinson
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Adrien Rabiot
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Farès Ghedjemis
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Christian Pulisic
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Giacomo Calò
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Koni De Winter
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Pervis Estupiñán
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Luka Modric
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Davide Bartesaghi
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Filippo Terracciano
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Gabriele Calvani
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Giorgi Kvernadze
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Yunus Musah
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Romano Schmid
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Goalscorer,false,1,Ilario Monterisi
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Ardon Jashari
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Total Shots Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Total Shots Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Total Shots Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Total Shots Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Total Shots Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Giorgio Cittadini
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Ilario Monterisi
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Strahinja Pavlovic
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Matteo Cichella
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Aleksa Terzic
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Patrizio Masini
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Corners Totals Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Away,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Total Shots Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Home,false,1,
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Anytime Assist,true,1,Gabriele Calvani
-71945416,2026-11-22T17:00:00Z,Grosvenor,Italy - Serie A,AC Milan,Frosinone Calcio,Goalkeeper Saves Away,false,1,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,ML,false,1,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Draw No Bet,false,1,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Double Chance,false,1,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Spread,false,6,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Totals,false,9,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Both Teams To Score,false,1,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,ML HT,false,1,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Totals HT,false,4,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,European Handicap,false,4,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,11,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Bookings Totals,false,3,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,46,Alessandro Bastoni | Andy Diouf | Benjamin Pavard | Carlos Augusto | Charles De Ketelaere | Curtis Jones | Davide Zappacosta | Djed Spence
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,First Goalscorer,false,46,Alessandro Bastoni | Andy Diouf | Benjamin Pavard | Carlos Augusto | Charles De Ketelaere | Curtis Jones | Davide Zappacosta | Djed Spence
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Player To Score or Assist,true,42,Alessandro Bastoni | Andy Diouf | Benjamin Pavard | Carlos Augusto | Charles De Ketelaere | Curtis Jones | Davide Zappacosta | Djed Spence
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Bookings Totals Home,false,3,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Bookings Totals Away,false,3,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Player Shots on Target,false,106,Alessandro Bastoni | Alessandro Bastoni | Benjamin Pavard | Benjamin Pavard | Carlos Augusto | Carlos Augusto | Carlos Augusto | Charles De Ketelaere
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Player To Assist,true,42,Alessandro Bastoni | Andy Diouf | Benjamin Pavard | Carlos Augusto | Charles De Ketelaere | Curtis Jones | Davide Zappacosta | Djed Spence
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Player to be Booked,false,42,Alessandro Bastoni | Andy Diouf | Benjamin Pavard | Carlos Augusto | Charles De Ketelaere | Curtis Jones | Davide Zappacosta | Djed Spence
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Home,false,6,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Away,false,8,
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Player Fouls,false,126,Alessandro Bastoni | Alessandro Bastoni | Alessandro Bastoni | Andy Diouf | Andy Diouf | Andy Diouf | Benjamin Pavard | Benjamin Pavard
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Player To Be Fouled,false,126,Alessandro Bastoni | Alessandro Bastoni | Alessandro Bastoni | Andy Diouf | Andy Diouf | Andy Diouf | Benjamin Pavard | Benjamin Pavard
-71945406,2026-11-22T19:45:00Z,Paddy Power,Italy - Serie A,Atalanta BC,Inter Milano,Player Shots,false,126,Alessandro Bastoni | Alessandro Bastoni | Alessandro Bastoni | Andy Diouf | Andy Diouf | Andy Diouf | Benjamin Pavard | Benjamin Pavard
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Kamal-Deen Sulemana
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Jonathan Rowe
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Alessandro Bastoni
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Andy Diouf
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Manuel Akanji
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Carlos Augusto
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Charles De Ketelaere
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Gianluca Scamacca
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Yann Bisseck
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Nikola Krstovic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Carlos Augusto
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Francesco Pio Esposito
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Kamal-Deen Sulemana
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Marcus Thuram
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Djed Spence
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Hakan Çalhanoglu
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Thomas Kristensen
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Mario Pasalic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Eljif Elmas
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Davide Zappacosta
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Charles De Ketelaere
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Lorenzo Bernasconi
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Raoul Bellanova
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Hakan Çalhanoglu
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Federico Dimarco
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Nicolò Barella
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Nikola Krstovic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Gianluca Scamacca
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Nicola Zalewski
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Federico Dimarco
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Nicola Zalewski
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Aleksandar Stankovic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Giacomo Raspadori
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Piotr Zielinski
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Sead Kolasinac
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Piotr Zielinski
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Eljif Elmas
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Davide Zappacosta
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Andy Diouf
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Lazar Samardzic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,ML,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Marcus Thuram
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Gianluca Gaetano
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Petar Sucic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Éderson José dos Santos Lourenco da Silva
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Francesco Pio Esposito
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Petar Sucic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Djed Spence
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Nicolò Barella
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Giacomo Raspadori
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Giorgio Scalvini
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Jonathan Rowe
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Mario Pasalic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Luis Henrique
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Relja Obric
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Luis Henrique
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Goalscorer,false,1,Lautaro Martínez
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Lautaro Martínez
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Total Shots Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Yann Bisseck
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Raoul Bellanova
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Alessandro Bastoni
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Lorenzo Bernasconi
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Total Shots Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Giorgio Scalvini
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Éderson José dos Santos Lourenco da Silva
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Manuel Akanji
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Total Shots Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Total Shots Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Home,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Goalkeeper Saves Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Total Shots Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Total Shots Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Sead Kolasinac
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Relja Obric
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Aleksandar Stankovic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Lazar Samardzic
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Total Shots Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Gianluca Gaetano
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals Away,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Corners Totals,false,1,
-71945406,2026-11-22T19:45:00Z,Grosvenor,Italy - Serie A,Atalanta BC,Inter Milano,Anytime Assist,true,1,Thomas Kristensen
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,ML,false,1,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Draw No Bet,false,1,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Double Chance,false,1,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Spread,false,5,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Totals,false,9,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Both Teams To Score,false,1,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,ML HT,false,1,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Totals HT,false,4,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,European Handicap,false,4,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals,false,11,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Bookings Totals,false,6,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,49,Adam Bakoune | Alex Jimenez | Alieu Njie | Andrea Carboni | Andrea Colpani | Antonio Pirro | Arthur Atta | Beto
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,First Goalscorer,false,49,Adam Bakoune | Alex Jimenez | Alieu Njie | Andrea Carboni | Andrea Colpani | Antonio Pirro | Arthur Atta | Beto
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Bookings Totals Home,false,4,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Bookings Totals Away,false,4,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Player To Score or Assist,true,47,Adam Bakoune | Alex Jimenez | Alieu Njie | Andrea Carboni | Andrea Colpani | Antonio Pirro | Arthur Atta | Beto
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Player To Assist,true,47,Adam Bakoune | Alex Jimenez | Alieu Njie | Andrea Carboni | Andrea Colpani | Antonio Pirro | Arthur Atta | Beto
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Away,false,7,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Player Shots,false,141,Adam Bakoune | Adam Bakoune | Adam Bakoune | Alex Jimenez | Alex Jimenez | Alex Jimenez | Alieu Njie | Alieu Njie
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Player to be Booked,false,47,Adam Bakoune | Alex Jimenez | Alieu Njie | Andrea Carboni | Andrea Colpani | Antonio Pirro | Arthur Atta | Beto
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Home,false,7,
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Player Fouls,false,141,Adam Bakoune | Adam Bakoune | Adam Bakoune | Alex Jimenez | Alex Jimenez | Alex Jimenez | Alieu Njie | Alieu Njie
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Player To Be Fouled,false,141,Adam Bakoune | Adam Bakoune | Adam Bakoune | Alex Jimenez | Alex Jimenez | Alex Jimenez | Alieu Njie | Alieu Njie
-71945418,2026-11-23T19:45:00Z,Paddy Power,Italy - Serie A,AC Monza,ACF Fiorentina,Player Shots on Target,false,115,Adam Bakoune | Adam Bakoune | Alieu Njie | Alieu Njie | Alieu Njie | Andrea Carboni | Andrea Carboni | Andrea Colpani
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Leonardo Colombo
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Dany Mota
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Cyril Ngonge
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Pedro Goncalves
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Alejandro Jiménez
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Ebenezer Akinsanmiro
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Eddy Kouadio
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Dany Mota
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Alieu Njie
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Mateo Pellegrino
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,ML,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Ricardo Mangas
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Franco Mastantuono
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Christ Inao Oulaï
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Franco Mastantuono
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Manga Michel Quentin Foe Ondoa
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Samuele Birindelli
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Cher Ndour
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Christ Inao Oulaï
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Ebenezer Akinsanmiro
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Victor Valdepenas
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Jay Robinson
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Gustavo Varela
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Adam Bakoune
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Idrissa Touré
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Exequiel Zeballos
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Leonardo Colombo
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Jay Robinson
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Marco Brescianini
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Andrea Carboni
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Viery Fernandes Santos Lopes
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Alejandro Jiménez
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Radu Dragusin
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Marco Brescianini
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Cher Ndour
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Gustavo Varela
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Mathis Mout
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Marin Pongracic
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Idrissa Touré
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Alieu Njie
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Pedro Goncalves
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Victor Valdepenas
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Ricardo Mangas
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Nicolò Fagioli
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Mateo Pellegrino
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Saba Goglichidze
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,João Mário
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Nicolò Fagioli
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Exequiel Zeballos
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Lorenzo Lucchesi
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Cyril Ngonge
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Andrea Carboni
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Jan Ziolkowski
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Goalscorer,false,1,Mathis Mout
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Total Shots Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Eddy Kouadio
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,João Mário
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Viery Fernandes Santos Lopes
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Jan Ziolkowski
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Radu Dragusin
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Total Shots Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Total Shots Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Total Shots Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Total Shots Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Samuele Birindelli
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Marin Pongracic
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Saba Goglichidze
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Corners Totals Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Away,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Goalkeeper Saves Home,false,1,
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Manga Michel Quentin Foe Ondoa
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Lorenzo Lucchesi
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Anytime Assist,true,1,Adam Bakoune
-71945418,2026-11-23T19:45:00Z,Grosvenor,Italy - Serie A,AC Monza,ACF Fiorentina,Total Shots Home,false,1,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,ML,false,1,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Draw No Bet,false,1,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Double Chance,false,1,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Spread,false,5,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Totals,false,9,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Both Teams To Score,false,1,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,ML HT,false,1,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Totals HT,false,4,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,European Handicap,false,4,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals,false,10,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Bookings Totals,false,6,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,43,Akor Adams | Albion Rrahmani | Alfred Duncan | Andrea Adorante | Antoine Hainaut | Armel Bella-Kotchap | Artem Dovbyk | Arthur Theate
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,First Goalscorer,false,43,Akor Adams | Albion Rrahmani | Alfred Duncan | Andrea Adorante | Antoine Hainaut | Armel Bella-Kotchap | Artem Dovbyk | Arthur Theate
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Player to be Booked,false,43,Akor Adams | Albion Rrahmani | Alfred Duncan | Andrea Adorante | Antoine Hainaut | Armel Bella-Kotchap | Artem Dovbyk | Arthur Theate
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Away,false,7,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Player Shots on Target,false,107,Akor Adams | Akor Adams | Akor Adams | Albion Rrahmani | Albion Rrahmani | Albion Rrahmani | Alfred Duncan | Alfred Duncan
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Player To Be Fouled,false,126,Akor Adams | Akor Adams | Akor Adams | Albion Rrahmani | Albion Rrahmani | Albion Rrahmani | Alfred Duncan | Alfred Duncan
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Bookings Totals Home,false,4,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Player Shots,false,198,Akor Adams | Akor Adams | Akor Adams | Akor Adams | Akor Adams | Akor Adams | Albion Rrahmani | Albion Rrahmani
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Bookings Totals Away,false,4,
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Player Fouls,false,126,Akor Adams | Akor Adams | Akor Adams | Albion Rrahmani | Albion Rrahmani | Albion Rrahmani | Alfred Duncan | Alfred Duncan
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Player To Score or Assist,true,42,Akor Adams | Albion Rrahmani | Alfred Duncan | Antoine Hainaut | Armel Bella-Kotchap | Artem Dovbyk | Arthur Theate | Eivind Helland
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Player To Assist,true,42,Akor Adams | Albion Rrahmani | Alfred Duncan | Antoine Hainaut | Armel Bella-Kotchap | Artem Dovbyk | Arthur Theate | Eivind Helland
+71945444,2026-11-27T19:45:00Z,Paddy Power,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Home,false,7,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Ridgeciano Haps
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Redouane Halhal
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Gianluca Busio
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,John Yeboah
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Akor Jerome Adams
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Roberto Piccoli
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Nicolò Casale
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Samuel Mbangula
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Simon Sohm
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Gianluca Busio
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,John Yeboah
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Riccardo Orsolini
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Nadir Zortea
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Lion Lauberbach
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Federico Bernardeschi
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Lion Lauberbach
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Pasquale Mazzocchi
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Federico Bernardeschi
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Nadir Zortea
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Lewis Ferguson
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Jens Odgaard
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Antoine Hainaut
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Toma Basic
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Akor Jerome Adams
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Simon Sohm
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Matteo Darmian
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Thórir Helgason
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Lewis Ferguson
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Juan Jesus
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Arthur Theate
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Kike Pérez
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Toma Basic
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Riccardo Orsolini
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,ML,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Rahim Alhassane
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Matías Moreno
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Thórir Helgason
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Nicolo Cambiaghi
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Antoine Hainaut
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Jens Odgaard
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Tommaso Pobega
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Samuel Mbangula
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Martin Vitik
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Kike Pérez
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Roberto Piccoli
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Goalscorer,false,1,Tommaso Pobega
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Nicolo Cambiaghi
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Total Shots Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Total Shots Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Total Shots Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Nicolò Casale
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Martin Vitik
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Redouane Halhal
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Pasquale Mazzocchi
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Total Shots Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Total Shots Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Matteo Darmian
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Ridgeciano Haps
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Arthur Theate
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Rahim Alhassane
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Goalkeeper Saves Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Matías Moreno
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Anytime Assist,true,1,Juan Jesus
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Away,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Home,false,1,
+71945444,2026-11-27T19:45:00Z,Grosvenor,Italy - Serie A,Venezia FC,Bologna FC,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,ML,false,1,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Draw No Bet,false,1,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Double Chance,false,1,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Spread,false,5,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Totals,false,9,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Both Teams To Score,false,1,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,European Handicap,false,4,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,5,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Bookings Totals,false,3,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,45,Abdoulaye Ndiaye | Abdou-Salam Konate | Adrian Bernabe | Aleksa Terzic | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Benjamin Cremaschi
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,First Goalscorer,false,45,Abdoulaye Ndiaye | Abdou-Salam Konate | Adrian Bernabe | Aleksa Terzic | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Benjamin Cremaschi
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Bookings Totals Home,false,3,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Bookings Totals Away,false,3,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Away,false,4,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Player To Assist,true,45,Abdoulaye Ndiaye | Abdou-Salam Konate | Adrian Bernabe | Aleksa Terzic | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Benjamin Cremaschi
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Player To Score or Assist,true,45,Abdoulaye Ndiaye | Abdou-Salam Konate | Adrian Bernabe | Aleksa Terzic | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Benjamin Cremaschi
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Player to be Booked,false,45,Abdoulaye Ndiaye | Abdou-Salam Konate | Adrian Bernabe | Aleksa Terzic | Alessio Zerbin | Anouar El Azzouzi | Anthony Oyono | Benjamin Cremaschi
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Player Fouls,false,90,Abdoulaye Ndiaye | Abdoulaye Ndiaye | Abdou-Salam Konate | Abdou-Salam Konate | Adrian Bernabe | Adrian Bernabe | Aleksa Terzic | Aleksa Terzic
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Player Shots on Target,false,115,Abdoulaye Ndiaye | Abdoulaye Ndiaye | Abdou-Salam Konate | Abdou-Salam Konate | Adrian Bernabe | Adrian Bernabe | Adrian Bernabe | Aleksa Terzic
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Player Shots,false,215,Abdoulaye Ndiaye | Abdoulaye Ndiaye | Abdoulaye Ndiaye | Abdou-Salam Konate | Abdou-Salam Konate | Abdou-Salam Konate | Abdou-Salam Konate | Adrian Bernabe
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,3,
+71945430,2026-11-28T14:00:00Z,Paddy Power,Italy - Serie A,Frosinone Calcio,Parma Calcio,Player To Be Fouled,false,135,Abdoulaye Ndiaye | Abdoulaye Ndiaye | Abdoulaye Ndiaye | Abdou-Salam Konate | Abdou-Salam Konate | Abdou-Salam Konate | Adrian Bernabe | Adrian Bernabe
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Farès Ghedjemis
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Anthony Oyono
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Nesta Elphege
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Sascha Britschgi
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,El Bilal Toure
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Enrico Del Prato
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Giacomo Calò
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Anthony Oyono
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Gabriele Bracaglia
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Vincent Sierro
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,El Bilal Toure
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Farès Ghedjemis
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Dominik Drobnic
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Vincent Sierro
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Abdoulaye Ndiaye
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Romano Schmid
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Giorgi Kvernadze
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Simone Lontani
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,ML,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Adrian Bernabe
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Adrian Bernabe
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Mandela Keita
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Giacomo Calò
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Giorgio Cittadini
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Christian Ordóñez
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Gabriele Calvani
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Aleksa Terzic
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Simone Lontani
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Patrizio Masini
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Gabriele Bracaglia
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Ilario Monterisi
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Giorgi Kvernadze
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Giovanni Fabbian
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Aleksa Terzic
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Franco Carboni
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Matteo Cichella
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Nesta Elphege
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Mariano Troilo
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Romano Schmid
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Diego Carlos
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Patrizio Masini
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Matteo Cichella
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Emanuele Valeri
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Giovanni Fabbian
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Emanuele Valeri
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Goalscorer,false,1,Benjamín Cremaschi
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Ilario Monterisi
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Giorgio Cittadini
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Total Shots Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Total Shots Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Abdoulaye Ndiaye
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Dominik Drobnic
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Mandela Keita
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Gabriele Calvani
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Benjamín Cremaschi
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Diego Carlos
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Enrico Del Prato
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Total Shots Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Total Shots Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Christian Ordóñez
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Mariano Troilo
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Sascha Britschgi
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Anytime Assist,true,1,Franco Carboni
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Goalkeeper Saves Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Total Shots Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Total Shots Away,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Total Shots Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Home,false,1,
+71945430,2026-11-28T14:00:00Z,Grosvenor,Italy - Serie A,Frosinone Calcio,Parma Calcio,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,ML,false,1,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Draw No Bet,false,1,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Double Chance,false,1,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Spread,false,5,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Totals,false,9,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Both Teams To Score,false,1,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,ML HT,false,1,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Totals HT,false,4,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,European Handicap,false,4,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,10,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Bookings Totals,false,3,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,42,Albert Gudmundsson | Alessio Cacciamani | Alfonso Pedraza | Andrea Pinamonti | Cesare Casadei | Che Adams | Cristiano Biraghi | Daniel Braganca
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,First Goalscorer,false,42,Albert Gudmundsson | Alessio Cacciamani | Alfonso Pedraza | Andrea Pinamonti | Cesare Casadei | Che Adams | Cristiano Biraghi | Daniel Braganca
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Bookings Totals Away,false,3,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Player to be Booked,false,42,Albert Gudmundsson | Alessio Cacciamani | Alfonso Pedraza | Andrea Pinamonti | Cesare Casadei | Che Adams | Cristiano Biraghi | Daniel Braganca
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Player Fouls,false,125,Albert Gudmundsson | Albert Gudmundsson | Albert Gudmundsson | Alessio Cacciamani | Alessio Cacciamani | Alessio Cacciamani | Alfonso Pedraza | Alfonso Pedraza
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Home,false,6,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Player To Be Fouled,false,126,Albert Gudmundsson | Albert Gudmundsson | Albert Gudmundsson | Alessio Cacciamani | Alessio Cacciamani | Alessio Cacciamani | Alfonso Pedraza | Alfonso Pedraza
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Player To Score or Assist,true,41,Albert Gudmundsson | Alessio Cacciamani | Alfonso Pedraza | Andrea Pinamonti | Cesare Casadei | Che Adams | Cristiano Biraghi | Daniel Braganca
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Player Shots on Target,false,102,Albert Gudmundsson | Albert Gudmundsson | Albert Gudmundsson | Alessio Cacciamani | Alessio Cacciamani | Alessio Cacciamani | Alfonso Pedraza | Alfonso Pedraza
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Player Shots,false,192,Albert Gudmundsson | Albert Gudmundsson | Albert Gudmundsson | Albert Gudmundsson | Albert Gudmundsson | Albert Gudmundsson | Alessio Cacciamani | Alessio Cacciamani
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Player To Assist,true,41,Albert Gudmundsson | Alessio Cacciamani | Alfonso Pedraza | Andrea Pinamonti | Cesare Casadei | Che Adams | Cristiano Biraghi | Daniel Braganca
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,7,
+71945440,2026-11-28T17:00:00Z,Paddy Power,Italy - Serie A,Torino FC,Lazio Rome,Bookings Totals Home,false,3,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Davide Frattesi
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Oliver Provstgaard
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Ricardo Rodríguez
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Davide Frattesi
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Nikola Vlasic
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Mattia Zaccagni
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Gvidas Gineitis
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Reda Belahyane
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Tijjani Noslin
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,ML,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Alessio Cacciamani
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Reda Belahyane
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Andrea Pinamonti
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Kian Fitz-Jim
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Pietro Comuzzo
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Saúl Coco
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Daniel Bragança
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Giovanni Simeone
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Diogo Leite
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Alessio Cacciamani
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Mattia Zaccagni
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Zakaria Aboukhlal
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Ché Adams
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Rolando Mandragora
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Giovanni Simeone
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Ché Adams
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Sandro Kulenovic
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Sandro Kulenovic
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Romano Floriani
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Tijjani Noslin
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Daniel Bragança
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Kian Fitz-Jim
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Gustav Isaksen
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Zakaria Aboukhlal
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Andrea Pinamonti
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Rafik Belghali
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Nikola Vlasic
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Diogo Leite
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Rolando Mandragora
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Gustav Isaksen
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Niccolò Fortini
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Total Shots Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Total Shots Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Oliver Provstgaard
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Rafik Belghali
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Total Shots Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Pietro Comuzzo
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Saúl Coco
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Danilho Doekhi
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Total Shots Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Total Shots Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Goalkeeper Saves Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Niccolò Fortini
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Ricardo Rodríguez
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Gvidas Gineitis
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Romano Floriani
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Danilho Doekhi
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Assist,true,1,Matteo Cancellieri
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Anytime Goalscorer,false,1,Matteo Cancellieri
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Home,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Away,false,1,
+71945440,2026-11-28T17:00:00Z,Grosvenor,Italy - Serie A,Torino FC,Lazio Rome,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,ML,false,1,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Draw No Bet,false,1,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Double Chance,false,1,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Spread,false,6,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Totals,false,9,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Both Teams To Score,false,1,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,ML HT,false,1,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Totals HT,false,4,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,European Handicap,false,4,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,10,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Bookings Totals,false,6,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,44,Aleksandar Stankovic | Alessandro Marcandalli | Alexsandro Amorim de Freitas Filho | Andy Diouf | Benjamin Pavard | Carlos Augusto | Cody Drameh | Curtis Jones
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,First Goalscorer,false,44,Aleksandar Stankovic | Alessandro Marcandalli | Alexsandro Amorim de Freitas Filho | Andy Diouf | Benjamin Pavard | Carlos Augusto | Cody Drameh | Curtis Jones
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Bookings Totals Away,false,5,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Player Shots,false,186,Aleksandar Stankovic | Aleksandar Stankovic | Aleksandar Stankovic | Aleksandar Stankovic | Aleksandar Stankovic | Aleksandar Stankovic | Alessandro Marcandalli | Alessandro Marcandalli
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Player to be Booked,false,41,Aleksandar Stankovic | Alessandro Marcandalli | Alexsandro Amorim de Freitas Filho | Andy Diouf | Benjamin Pavard | Carlos Augusto | Cody Drameh | Curtis Jones
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,10,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Player To Assist,true,41,Aleksandar Stankovic | Alessandro Marcandalli | Alexsandro Amorim de Freitas Filho | Andy Diouf | Benjamin Pavard | Carlos Augusto | Cody Drameh | Curtis Jones
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Player To Score or Assist,true,41,Aleksandar Stankovic | Alessandro Marcandalli | Alexsandro Amorim de Freitas Filho | Andy Diouf | Benjamin Pavard | Carlos Augusto | Cody Drameh | Curtis Jones
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Player Fouls,false,120,Aleksandar Stankovic | Aleksandar Stankovic | Aleksandar Stankovic | Alessandro Marcandalli | Alessandro Marcandalli | Alessandro Marcandalli | Alexsandro Amorim de Freitas Filho | Alexsandro Amorim de Freitas Filho
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Player To Be Fouled,false,120,Aleksandar Stankovic | Aleksandar Stankovic | Aleksandar Stankovic | Alessandro Marcandalli | Alessandro Marcandalli | Alessandro Marcandalli | Alexsandro Amorim de Freitas Filho | Alexsandro Amorim de Freitas Filho
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Away,false,4,
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Player Shots on Target,false,101,Aleksandar Stankovic | Aleksandar Stankovic | Aleksandar Stankovic | Alessandro Marcandalli | Alexsandro Amorim de Freitas Filho | Alexsandro Amorim de Freitas Filho | Benjamin Pavard | Benjamin Pavard
+71945432,2026-11-28T19:45:00Z,Paddy Power,Italy - Serie A,Inter Milano,Genoa CFC,Bookings Totals Home,false,4,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Petar Sucic
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Djed Spence
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Alessandro Marcandalli
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Samuel Wiafe
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Stephan El Shaarawy
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Junior Messias
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Nicolò Barella
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Piotr Zielinski
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Federico Dimarco
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Marcus Thuram
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Mario Mitaj
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Piotr Zielinski
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,ML,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Kingsley Ehizibue
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Andy Diouf
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Milutin Osmajic
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Marcus Thuram
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Lautaro Martínez
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Mikael Egill Ellertsson
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Aleksandar Stankovic
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Luis Henrique
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Petar Sucic
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Djibril Sow
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Hamed Traorè
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Yann Bisseck
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Francesco Pio Esposito
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Sebastian Otoa
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Stephan El Shaarawy
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Alexsandro Amorim de Freitas Filho
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Andy Diouf
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Morten Frendrup
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Tommaso Baldanzi
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Johan Vásquez
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Federico Dimarco
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Carlos Augusto
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Vitinha
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Nicolò Barella
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Luis Henrique
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Lautaro Martínez
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Francesco Pio Esposito
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Carlos Augusto
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Djed Spence
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Goalscorer,false,1,Manuel Akanji
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Total Shots Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Total Shots Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Total Shots Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Djibril Sow
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Samuel Wiafe
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Junior Messias
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Yann Bisseck
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Mario Mitaj
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Morten Frendrup
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Milutin Osmajic
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Johan Vásquez
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Total Shots Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Alexsandro Amorim de Freitas Filho
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Aleksandar Stankovic
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Tommaso Baldanzi
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Mikael Egill Ellertsson
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Sebastian Otoa
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Total Shots Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Kingsley Ehizibue
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Vitinha
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Manuel Akanji
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Anytime Assist,true,1,Hamed Traorè
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Goalkeeper Saves Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Total Shots Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Away,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Home,false,1,
+71945432,2026-11-28T19:45:00Z,Grosvenor,Italy - Serie A,Inter Milano,Genoa CFC,Corners Totals Away,false,1,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,ML,false,1,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Double Chance,false,1,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Spread,false,5,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Totals,false,9,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Both Teams To Score,false,1,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,ML HT,false,1,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Totals HT,false,4,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,European Handicap,false,4,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,11,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Bookings Totals,false,6,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,40,Alejandro Jimenez | Alessandro Zanoli | Alieu Njie | Arthur Atta | Beto | Brando Mazzeo | Cher Ndour | Christian Kabasele
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,First Goalscorer,false,40,Alejandro Jimenez | Alessandro Zanoli | Alieu Njie | Arthur Atta | Beto | Brando Mazzeo | Cher Ndour | Christian Kabasele
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Bookings Totals Away,false,5,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Player Shots on Target,false,98,Alessandro Zanoli | Alessandro Zanoli | Alessandro Zanoli | Alieu Njie | Alieu Njie | Alieu Njie | Arthur Atta | Arthur Atta
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Player To Be Fouled,false,120,Alejandro Jimenez | Alejandro Jimenez | Alejandro Jimenez | Alessandro Zanoli | Alessandro Zanoli | Alessandro Zanoli | Alieu Njie | Alieu Njie
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Player To Score or Assist,true,40,Alejandro Jimenez | Alessandro Zanoli | Alieu Njie | Arthur Atta | Beto | Brando Mazzeo | Cher Ndour | Christian Kabasele
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Away,false,7,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Home,false,7,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Player Fouls,false,120,Alejandro Jimenez | Alejandro Jimenez | Alejandro Jimenez | Alessandro Zanoli | Alessandro Zanoli | Alessandro Zanoli | Alieu Njie | Alieu Njie
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Player to be Booked,false,40,Alejandro Jimenez | Alessandro Zanoli | Alieu Njie | Arthur Atta | Beto | Brando Mazzeo | Cher Ndour | Christian Kabasele
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Player Shots,false,185,Alejandro Jimenez | Alejandro Jimenez | Alejandro Jimenez | Alejandro Jimenez | Alessandro Zanoli | Alessandro Zanoli | Alessandro Zanoli | Alessandro Zanoli
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Bookings Totals Home,false,4,
+71945442,2026-11-29T11:30:00Z,Paddy Power,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Player To Assist,true,40,Alejandro Jimenez | Alessandro Zanoli | Alieu Njie | Arthur Atta | Beto | Brando Mazzeo | Cher Ndour | Christian Kabasele
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,ML,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Alieu Njie
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Alejandro Jiménez
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Jakub Piotrowski
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Radu Dragusin
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,James Abankwah
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Giorgi Chakvetadze
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Jakub Piotrowski
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Marco Brescianini
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Mateo Pellegrino
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Mergim Vojvoda
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Alejandro Jiménez
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Nicolò Fagioli
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Christ Inao Oulaï
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Giorgi Chakvetadze
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Keinan Davis
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Franco Mastantuono
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Jurgen Ekkelenkamp
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Victor Valdepenas
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Keinan Davis
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,David Alaba
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Franco Mastantuono
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Alieu Njie
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Nicolò Fagioli
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Marco Brescianini
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Christ Inao Oulaï
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Lennon Miller
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Christian Kabasele
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Marin Pongracic
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Hassane Kamara
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Jesper Karlström
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Cher Ndour
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Mergim Vojvoda
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Oumar Solet
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Victor Valdepenas
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Matteo Palma
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Jurgen Ekkelenkamp
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Nicolò Zaniolo
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Goalscorer,false,1,Mateo Pellegrino
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Nicolò Zaniolo
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Cher Ndour
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Lennon Miller
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Total Shots Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Total Shots Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Oumar Solet
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,David Alaba
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Christian Kabasele
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Jesper Karlström
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Total Shots Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Total Shots Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Total Shots Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Matteo Palma
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Hassane Kamara
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Marin Pongracic
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,Radu Dragusin
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Total Shots Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Anytime Assist,true,1,James Abankwah
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Goalkeeper Saves Away,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Home,false,1,
+71945442,2026-11-29T11:30:00Z,Grosvenor,Italy - Serie A,Udinese Calcio,ACF Fiorentina,Corners Totals Away,false,1,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,ML,false,1,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Double Chance,false,1,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Spread,false,5,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Totals,false,9,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Both Teams To Score,false,1,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,ML HT,false,1,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Totals HT,false,4,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,European Handicap,false,4,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,4,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Bookings Totals,false,6,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,40,Amir Rrahmani | Andrea Ghion | Armand Lauriente | Benjamin Dominguez | Billy Gilmour | Cas Odenthal | Cristian Volpato | Daniel Boloca
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,First Goalscorer,false,40,Amir Rrahmani | Andrea Ghion | Armand Lauriente | Benjamin Dominguez | Billy Gilmour | Cas Odenthal | Cristian Volpato | Daniel Boloca
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,4,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Player To Score or Assist,true,40,Amir Rrahmani | Andrea Ghion | Armand Lauriente | Benjamin Dominguez | Billy Gilmour | Cas Odenthal | Cristian Volpato | Daniel Boloca
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Bookings Totals Away,false,4,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Bookings Totals Home,false,4,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Player to be Booked,false,40,Amir Rrahmani | Andrea Ghion | Armand Lauriente | Benjamin Dominguez | Billy Gilmour | Cas Odenthal | Cristian Volpato | Daniel Boloca
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Player Fouls,false,120,Amir Rrahmani | Amir Rrahmani | Amir Rrahmani | Andrea Ghion | Andrea Ghion | Andrea Ghion | Armand Lauriente | Armand Lauriente
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Player Shots,false,179,Amir Rrahmani | Amir Rrahmani | Amir Rrahmani | Amir Rrahmani | Andrea Ghion | Andrea Ghion | Andrea Ghion | Armand Lauriente
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Home,false,4,
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Player To Assist,true,40,Amir Rrahmani | Andrea Ghion | Armand Lauriente | Benjamin Dominguez | Billy Gilmour | Cas Odenthal | Cristian Volpato | Daniel Boloca
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Player Shots on Target,false,94,Amir Rrahmani | Amir Rrahmani | Andrea Ghion | Andrea Ghion | Armand Lauriente | Armand Lauriente | Armand Lauriente | Benjamin Dominguez
+71945438,2026-11-29T14:00:00Z,Paddy Power,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Player To Be Fouled,false,120,Amir Rrahmani | Amir Rrahmani | Amir Rrahmani | Andrea Ghion | Andrea Ghion | Andrea Ghion | Armand Lauriente | Armand Lauriente
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,ML,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Sam Beukema
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Domenico Berardi
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Sebastiano Esposito
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Rasmus Højlund
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Ignace Van Der Brempt
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Darryl Bakola
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Rafa Marín
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Kieron Bowie
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Matteo Politano
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Matteo Politano
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Leonardo Spinazzola
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Armand Laurienté
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Sebastian Walukiewicz
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Noa Lang
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Billy Gilmour
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Fali Cande
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Noa Lang
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Domenico Berardi
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Billy Gilmour
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Duje Caleta-Car
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Mathías Olivera
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Josh Doig
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Simone Cinquegrano
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Benjamín Domínguez
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Armand Laurienté
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Benoît Badiashile
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Lorenzo Lucca
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Ibrahim Sulemana
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Kieron Bowie
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Nemanja Matić
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Rafa Obrador
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Benjamín Domínguez
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,David Neres
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,David Neres
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Simone Cinquegrano
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Rasmus Højlund
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Kevin De Bruyne
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Cas Odenthal
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Lorenzo Lucca
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Scott McTominay
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Giovanni Di Lorenzo
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Sebastiano Esposito
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Scott McTominay
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Frank Anguissa
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Amir Rrahmani
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Ibrahim Sulemana
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Luca Marianucci
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Kristian Thorstvedt
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Jay Idzes
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Luca Lipani
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Kevin De Bruyne
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Goalscorer,false,1,Kristian Thorstvedt
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Leonardo Spinazzola
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Frank Anguissa
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Total Shots Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Total Shots Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Total Shots Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Mathías Olivera
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Benoît Badiashile
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Luca Marianucci
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Cas Odenthal
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Rafa Marín
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Luca Lipani
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Fali Cande
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Amir Rrahmani
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Total Shots Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Total Shots Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Darryl Bakola
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Nemanja Matić
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Rafa Obrador
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Duje Caleta-Car
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Josh Doig
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Total Shots Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Goalkeeper Saves Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Giovanni Di Lorenzo
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Sebastian Walukiewicz
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Jay Idzes
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Ignace Van Der Brempt
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Anytime Assist,true,1,Sam Beukema
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Home,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,1,
+71945438,2026-11-29T14:00:00Z,Grosvenor,Italy - Serie A,Sassuolo Calcio,SSC Napoli,Corners Totals Away,false,1,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,ML,false,1,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Double Chance,false,1,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Spread,false,5,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Totals,false,9,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Both Teams To Score,false,1,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,ML HT,false,1,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Totals HT,false,4,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,European Handicap,false,4,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,4,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Bookings Totals,false,3,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,44,Adam Bakoune | Andrea Carboni | Andrea Colpani | Bryan Cristante | Cyril Ngonge | Daniele Ghilardi | Dany Mota | Donyell Malen
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,First Goalscorer,false,44,Adam Bakoune | Andrea Carboni | Andrea Colpani | Bryan Cristante | Cyril Ngonge | Daniele Ghilardi | Dany Mota | Donyell Malen
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Player Shots on Target,false,103,Adam Bakoune | Adam Bakoune | Andrea Carboni | Andrea Colpani | Andrea Colpani | Andrea Colpani | Bryan Cristante | Bryan Cristante
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Player Shots,false,131,Adam Bakoune | Adam Bakoune | Adam Bakoune | Andrea Carboni | Andrea Carboni | Andrea Carboni | Andrea Colpani | Andrea Colpani
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Player to be Booked,false,44,Adam Bakoune | Andrea Carboni | Andrea Colpani | Bryan Cristante | Cyril Ngonge | Daniele Ghilardi | Dany Mota | Donyell Malen
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Player Fouls,false,132,Adam Bakoune | Adam Bakoune | Adam Bakoune | Andrea Carboni | Andrea Carboni | Andrea Carboni | Andrea Colpani | Andrea Colpani
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Corners Totals Away,false,4,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Bookings Totals Home,false,3,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Player To Be Fouled,false,132,Adam Bakoune | Adam Bakoune | Adam Bakoune | Andrea Carboni | Andrea Carboni | Andrea Carboni | Andrea Colpani | Andrea Colpani
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Bookings Totals Away,false,3,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Player To Score or Assist,true,44,Adam Bakoune | Andrea Carboni | Andrea Colpani | Bryan Cristante | Cyril Ngonge | Daniele Ghilardi | Dany Mota | Donyell Malen
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,3,
+71945436,2026-11-29T17:00:00Z,Paddy Power,Italy - Serie A,AS Roma,AC Monza,Player To Assist,true,44,Adam Bakoune | Andrea Carboni | Andrea Colpani | Bryan Cristante | Cyril Ngonge | Daniele Ghilardi | Dany Mota | Donyell Malen
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Niccolò Pisilli
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Emanuele Lulli
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Eddy Kouadio
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Samuele Birindelli
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Mario Hermoso
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Niccolò Pisilli
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Donyell Malen
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Manga Michel Quentin Foe Ondoa
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Leonardo Colombo
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Gianluca Mancini
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Emanuele Lulli
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Marten de Roon
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Kouadio Kone
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Mario Hermoso
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Marten de Roon
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Rodrigo Mora de Carvalho
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Santiago Castro
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Dany Mota
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Konstantinos Koulierakis
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Donyell Malen
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Nahuel Molina
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Idrissa Touré
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Jay Robinson
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Nahuel Molina
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Gustavo Varela
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Ricardo Mangas
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Santiago Castro
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Lorenzo Lucchesi
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Mathis Mout
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Bryan Cristante
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Bryan Cristante
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Andrea Carboni
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Daniele Ghilardi
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Ebenezer Akinsanmiro
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Konstantinos Koulierakis
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Evan Ndicka
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Rodrigo Mora de Carvalho
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Wesley Vinícius França Lima
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Exequiel Zeballos
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,ML,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Exequiel Zeballos
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Kouadio Kone
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Jan Ziolkowski
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Adam Bakoune
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Saba Goglichidze
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Wesley Vinícius França Lima
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Matías Soulé
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Leonardo Balerdi
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Evan Ndicka
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Goalscorer,false,1,Matías Soulé
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Gianluca Mancini
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Total Shots Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Total Shots Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Total Shots Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Adam Bakoune
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Ricardo Mangas
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Saba Goglichidze
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Samuele Birindelli
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Ebenezer Akinsanmiro
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Andrea Carboni
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Mathis Mout
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Daniele Ghilardi
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Away,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Total Shots Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Total Shots Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Total Shots Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Gustavo Varela
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Idrissa Touré
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Lorenzo Lucchesi
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Leonardo Balerdi
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Leonardo Colombo
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Goalkeeper Saves Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Corners Totals Home,false,1,
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Jay Robinson
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Manga Michel Quentin Foe Ondoa
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Jan Ziolkowski
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Dany Mota
+71945436,2026-11-29T17:00:00Z,Grosvenor,Italy - Serie A,AS Roma,AC Monza,Anytime Assist,true,1,Eddy Kouadio
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,ML,false,1,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Double Chance,false,1,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Spread,false,5,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Totals,false,9,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Both Teams To Score,false,1,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,ML HT,false,1,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Totals HT,false,4,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,European Handicap,false,4,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Half Time / Full Time,false,9,Away / Away | Away / Draw | Away / Home | Draw / Away | Draw / Draw | Draw / Home | Home / Away | Home / Draw
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,4,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Bookings Totals,false,3,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,44,Adrian Adriano Lahdo | Alberto Dossena | Alex Valle | Anastasios Douvikas | Andrea Cambiaso | Arman Durmisi | Assane Diao | Augusto Owusu
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,First Goalscorer,false,44,Adrian Adriano Lahdo | Alberto Dossena | Alex Valle | Anastasios Douvikas | Andrea Cambiaso | Arman Durmisi | Assane Diao | Augusto Owusu
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Player To Score or Assist,true,42,Adrian Adriano Lahdo | Alberto Dossena | Alex Valle | Anastasios Douvikas | Andrea Cambiaso | Assane Diao | Augusto Owusu | Daniele Rugani
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Bookings Totals Home,false,3,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Player Shots on Target,false,101,Adrian Adriano Lahdo | Adrian Adriano Lahdo | Adrian Adriano Lahdo | Alberto Dossena | Alberto Dossena | Alex Valle | Alex Valle | Anastasios Douvikas
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Player To Assist,true,42,Adrian Adriano Lahdo | Alberto Dossena | Alex Valle | Anastasios Douvikas | Andrea Cambiaso | Assane Diao | Augusto Owusu | Daniele Rugani
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Correct Score,false,78,0-0 | 0-1 | 0-10 | 0-11 | 0-2 | 0-3 | 0-4 | 0-5
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Bookings Totals Away,false,3,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Player to be Booked,false,42,Adrian Adriano Lahdo | Alberto Dossena | Alex Valle | Anastasios Douvikas | Andrea Cambiaso | Assane Diao | Augusto Owusu | Daniele Rugani
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Home,false,4,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Away,false,4,
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Player To Be Fouled,false,126,Adrian Adriano Lahdo | Adrian Adriano Lahdo | Adrian Adriano Lahdo | Alberto Dossena | Alberto Dossena | Alberto Dossena | Alex Valle | Alex Valle
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Player Shots,false,126,Adrian Adriano Lahdo | Adrian Adriano Lahdo | Adrian Adriano Lahdo | Alberto Dossena | Alberto Dossena | Alberto Dossena | Alex Valle | Alex Valle
+71945428,2026-11-29T19:45:00Z,Paddy Power,Italy - Serie A,Como 1907,Juventus Turin,Player Fouls,false,126,Adrian Adriano Lahdo | Adrian Adriano Lahdo | Adrian Adriano Lahdo | Alberto Dossena | Alberto Dossena | Alberto Dossena | Alex Valle | Alex Valle
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,ML,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Yan Couto
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Juan Cabal
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Martin Baturina
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Nico Paz
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Jeremie Boga
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Máximo Perrone
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Weston McKennie
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Kerim Alajbegovic
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Kaiki Bruno da Silva
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Tasos Douvikas
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Marc-Oliver Kempf
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Douglas Luiz
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Nicolás González
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Nick Woltemade
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Martin Baturina
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Lucas Da Cunha
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Lloyd Kelly
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Luis Milla
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Nicolás González
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Samuele Ricci
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Douglas Luiz
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Bremer
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Jhon Lucumí
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Teun Koopmeiners
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Federico Gatti
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Nick Woltemade
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Randal Kolo Muani
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Maxence Caqueret
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Assane Diao
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Zeki Çelik
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Jeremie Boga
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Luis Milla
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Randal Kolo Muani
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Teun Koopmeiners
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Kaiki Bruno da Silva
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Máximo Perrone
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Maxence Caqueret
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Álex Valle
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Zeki Çelik
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Jacobo Ramón
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Trevoh Chalobah
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Assane Diao
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Pape Sarr
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Francisco Conceição
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Goalscorer,false,1,Lucas Da Cunha
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Kerim Alajbegovic
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Nico Paz
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Tasos Douvikas
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Francisco Conceição
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Weston McKennie
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Samuele Ricci
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Pape Sarr
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Total Shots Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Goalkeeper Saves Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Goalkeeper Saves Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Total Shots Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Goalkeeper Saves Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Bremer
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Juan Cabal
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Álex Valle
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Jhon Lucumí
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Marc-Oliver Kempf
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Jacobo Ramón
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Total Shots Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Goalkeeper Saves Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Goalkeeper Saves Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Total Shots Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Total Shots Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Goalkeeper Saves Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Goalkeeper Saves Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Goalkeeper Saves Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Yan Couto
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Total Shots Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Lloyd Kelly
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Trevoh Chalobah
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Anytime Assist,true,1,Federico Gatti
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Home,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Corners Totals Away,false,1,
+71945428,2026-11-29T19:45:00Z,Grosvenor,Italy - Serie A,Como 1907,Juventus Turin,Total Shots Home,false,1,
