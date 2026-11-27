@@ -1,97 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-27T02:49:40.456068+00:00",
+  "generated_at": "2026-11-27T08:43:29Z",
   "league": "epl",
-  "row_count": 1,
-  "rows": [
-    {
-      "date": "2026-11-21",
-      "league": "epl",
-      "review_source": "fotmob_live",
-      "match": "Chelsea vs Leeds United",
-      "team": "Leeds United",
-      "opponent": "Chelsea",
-      "actual_taker": "Dominic Calvert-Lewin",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "53",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Dominic Calvert-Lewin",
-      "secondary_pre_match": "Lukas Nmecha",
-      "tertiary_pre_match": "Harry Wilson",
-      "primary_lineup_status": "",
-      "secondary_lineup_status": "",
-      "tertiary_lineup_status": "",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Dominic Calvert-Lewin took 1 penalty attempt and scored for Leeds United vs Chelsea. Primary pre-match: Dominic Calvert-Lewin (unknown). Secondary pre-match: Lukas Nmecha (unknown). No hierarchy change implied from this event.",
-      "context_generated_at": "2026-09-02",
-      "context_source_path": "data/goalscorer/epl-penalty-takers.json",
-      "actual_taker_match_status": "Yes - started",
-      "primary_on_pitch_at_penalty": "Yes - started",
-      "secondary_on_pitch_at_penalty": "No - bench",
-      "tertiary_on_pitch_at_penalty": "No - bench, on 90+1'",
-      "actual_taker_on_pitch_at_penalty": "Yes - started",
-      "event_evidence": [
-        {
-          "id": "fotmob|epl|5795518|2999372809",
-          "source_event_id": "2999372809",
-          "match_id": "5795518",
-          "source_url": "https://www.fotmob.com/api/data/matchDetails?matchId=5795518",
-          "observed_at": "2026-11-27T02:49:43+00:00",
-          "event_date": "2026-11-21",
-          "season": "2026/27",
-          "team": "Leeds United",
-          "taker": "Dominic Calvert-Lewin",
-          "primary": "Dominic Calvert-Lewin",
-          "primary_on_pitch": true,
-          "on_pitch_proof": {
-            "player": "Dominic Calvert-Lewin",
-            "minute": 53,
-            "added_time": 0,
-            "method": "completed_lineup_timeline",
-            "player_id": 612150,
-            "bucket": "starters",
-            "substitutions": [],
-            "events": [],
-            "reason": "on_pitch"
-          },
-          "minute": 53,
-          "penalty_kind": "in_match",
-          "competitive": true,
-          "finished": true,
-          "match": "Chelsea vs Leeds United",
-          "event_result": "scored"
-        }
-      ]
-    }
-  ],
+  "row_count": 0,
+  "rows": [],
   "source_health": {
     "complete": true,
     "errors": [],
     "dates_requested": [
-      "20261120",
-      "20261121",
-      "20261122",
-      "20261123",
-      "20261124",
       "20261125",
-      "20261126"
+      "20261126",
+      "20261127"
     ],
-    "matches_checked": 10
-  },
-  "hot_source_health": {
-    "complete": true,
-    "errors": [],
-    "dates_requested": [
-      "20261123"
-    ],
-    "matches_checked": 1
+    "matches_checked": 0
   }
 }
