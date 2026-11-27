@@ -1,5 +1,5 @@
 {
-  "contracts": 736,
+  "contracts": 737,
   "settled_contracts": 693,
   "paired_contracts": 556,
   "paired_fixtures": 222,
@@ -535,7 +535,7 @@
     }
   },
   "real_stake_units": 0,
-  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons. INVESTIGATE DATA: 2 retained contracts have a verified count discrepancy. Historical figures remain as recorded pending a separate settlement amendment; they are not promotion evidence. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-27T18:18:05.914169+00:00. Completed-fixture coverage checked at 2026-11-27T18:14:58.451888+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 288). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
+  "interpretation": "Same-contract first quotes; scores averaged within fixture. Research only. No automatic promotion. Identity repairs registered 28 October 2026; inspect cohort breakdown for consistent-input comparisons. INVESTIGATE DATA: 2 retained contracts have a verified count discrepancy. Historical figures remain as recorded pending a separate settlement amendment; they are not promotion evidence. Inputs: shots-input-integrity-20261113-v1 \u00b7 2026-11-27T19:12:00.940934+00:00. Completed-fixture coverage checked at 2026-11-27T18:14:58.451888+00:00; results after that check await the next refresh. Missing xG uses observed pairs only; fewer than 5 pairs in the last 10 uses the existing neutral quality factor (recent missing team rows: 288). Earlier forecasts, outcomes and ROI retained as issued; corrected inputs apply to new forecasts only.",
   "statshub_status": "NOT_CONNECTED",
   "clv_status": "NOT_YET_MEASURED",
   "review_milestones_fixtures": [
@@ -545,8 +545,8 @@
   "automatic_promotion": false,
   "input_integrity": {
     "policy": "shots-input-integrity-20261113-v1",
-    "generated_at": "2026-11-27T18:18:05.914169+00:00",
-    "base_sha256": "fe6cd9dd7aef5dc73648dec3436bee06dddcc0052c6f7b5f0e80d8728e37a415",
+    "generated_at": "2026-11-27T19:12:00.940934+00:00",
+    "base_sha256": "8ef65035d25e1902e46a2b8602d8eb296c5463c1eb31f1546cff9721bf295ec6",
     "amendment_sha256": "fac1b5f37b3ad946cc5e68d347bbd7444d0cd5952329a9b03bb91e7bcd4f839a",
     "source_rows": 44274,
     "prediction_rows": 44268,
@@ -606,15 +606,15 @@
   "model_fingerprint": "de9c6c8250e8ac5456d72bcf3075020c734fe7b67e63dd37ea9a0c0fcea8e446",
   "calibration_sha256": "f71d594b44547143d84646514ef32e688cf1160bff8f9072fc41e0bae13391bd",
   "preserved_prior_cohort_contracts": 569,
-  "generated_at": "2026-11-27T18:18:20Z",
-  "new_contracts": 33,
+  "generated_at": "2026-11-27T19:12:09Z",
+  "new_contracts": 1,
   "scan_exclusions": {
     "stale_price": 206,
     "outside_capture_window": 100
   },
-  "latest_archived_capture": "2026-11-27T18:15:54.004832+00:00",
+  "latest_archived_capture": "2026-11-27T19:10:46.516134+00:00",
   "latest_result_date": "2026-11-23",
-  "raw_upcoming_rows": 651,
+  "raw_upcoming_rows": 822,
   "status": "COLLECTING",
   "cohorts": {
     "paired-market-offset-20260930-v2": {
@@ -1325,7 +1325,7 @@
       "automatic_promotion": false
     },
     "paired-market-offset-20261113-input-v6": {
-      "contracts": 167,
+      "contracts": 168,
       "settled_contracts": 124,
       "paired_contracts": 124,
       "paired_fixtures": 48,
@@ -2150,7 +2150,7 @@
       "label": "30 October 2026 to input repair"
     },
     "repaired_inputs": {
-      "contracts": 167,
+      "contracts": 168,
       "settled_contracts": 124,
       "paired_contracts": 124,
       "paired_fixtures": 48,
@@ -2395,7 +2395,7 @@
   "strength_comparison": {
     "name": "Team Shots strength correction",
     "registered_at": "2026-11-10T17:20:47.882372+00:00",
-    "updated_at": "2026-11-27T18:18:20.063366+00:00",
+    "updated_at": "2026-11-27T19:12:09.577807+00:00",
     "protocol": {
       "actual_stake": 0,
       "alerts": false,
@@ -2429,11 +2429,8 @@
     "historical_replay_included": false,
     "capture": {
       "captured": 0,
-      "checked_at": "2026-11-27T18:18:20.063366+00:00",
-      "counts": {
-        "captured": 0,
-        "missing_exact_archived_shots_contract": 28
-      },
+      "checked_at": "2026-11-27T19:12:09.577807+00:00",
+      "counts": {},
       "state": "NO_NEW_ELIGIBLE_CONTRACTS"
     },
     "conflicts": 0,
