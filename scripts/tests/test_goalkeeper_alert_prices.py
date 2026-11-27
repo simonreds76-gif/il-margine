@@ -12,6 +12,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from goalkeeper_alert_prices import paired_prices, format_prices
 from goalkeeper_quote_integrity import verified_quote
+from paddy_keeper_prices import capture_paddy_prices
 
 
 def script(name):
@@ -66,6 +67,48 @@ class AlertPair(unittest.TestCase):
         self.assertEqual([q['goalkeeper'] for q in home], ['Keeper A',''])
         named = self.pair(alert_model='keeper_watch_v1',goalkeeper='Keeper B',identity_basis='same_fixture_lineup_side')
         self.assertEqual([q['goalkeeper'] for q in named], ['Keeper B',''])
+
+    def paddy_capture(self, markets, **change):
+        event = dict(id='123', date=self.row['kickoff_at'], home='Parma', away='Roma',
+                     bookmakers={'Paddy Power':markets})
+        return capture_paddy_prices([{**event, **change}], self.now)
+
+    def test_paddy_full_match_milestone_reaches_send_and_digest_without_second_claim(self):
+        market = dict(name='Goalkeeper To Make 3 Or More Saves', updatedAt=self.now.isoformat(),
+                      odds=[dict(home='4.50', away='2.64')])
+        self.sources += (self.paddy_capture([market]),)
+        alerts = script('goalkeeper-saves-alerts')
+        state = {}
+        self.assertEqual(alerts.claim([self.row],state,'run',self.now,[self.row],self.sources),1)
+        signal = state['signals']['abc']['signal']
+        self.assertIn('Paddy Power · team keeper · <b>2.64</b> · EV +20.0% · best price',alerts.message(signal))
+        self.assertIn('0.5u at 2.35 Grosvenor',alerts.message(signal))
+        self.assertEqual(alerts.claim([self.row],state,'retry',self.now,[self.row],self.sources),0)
+        digest = script('football-daily-signal-digest')
+        candidates = digest.goalkeeper_candidates([self.row],self.row['match_date'],now=self.now,sources=self.sources)
+        self.assertIn('Paddy Power · team keeper · 2.64', digest.candidate_block(candidates[0]))
+
+    def test_paddy_rejects_unmatched_stale_suspended_and_conflicting_odds(self):
+        market = dict(name='Player Saves', updatedAt=self.now.isoformat(),
+                      odds=[dict(label='Keeper B', hdp=2.5,over=2.6,under=1.4)])
+        invalid = [dict(name='Player Saves First Half'),dict(name='Combined Goalkeeper Saves'),
+                   dict(updatedAt=''),dict(updatedAt=(self.now-timedelta(minutes=11)).isoformat()),
+                   dict(updatedAt=(self.now+timedelta(minutes=1)).isoformat()),dict(suspended=True),
+                   dict(odds=[dict(label='Keeper A',hdp=2.5,over=2.6)]),
+                   dict(odds=[dict(label='Keeper B',hdp=3.0,over=2.6)]),
+                   dict(odds=[dict(label='Keeper B',hdp=2.5,under=2.6)]),
+                   dict(odds=[dict(label='Keeper B',hdp=2.5,over=2.6,suspended=True)]),
+                   dict(odds=[dict(label='Keeper B',hdp=2.5,over=v) for v in (2.6,2.7)])]
+        def display(snapshot):
+            prices = paired_prices(self.row,[self.row],self.now,self.sources+(snapshot,))
+            return format_prices({**self.row,'display_prices':prices})
+        for change in invalid:
+            self.assertIn('Paddy Power · no fresh matching odds', display(self.paddy_capture([{**market, **change}])), change)
+        for change in [dict(inPlay=True),dict(id='456'),dict(home='Roma',away='Parma'),
+                       dict(date=(self.now+timedelta(hours=19)).isoformat())]:
+            self.assertIn('Paddy Power · no fresh matching odds',display(self.paddy_capture([market],**change)),change)
+        self.assertIn('Paddy Power · Keeper B · <b>2.60</b>',display(self.paddy_capture([market])))
+        self.assertIn('Paddy Power · no fresh matching odds',display([]))
 
     def test_wrong_line_side_fixture_and_stale_quotes(self):
         for change in (dict(side='under'),dict(line=4.5),dict(away_team='Lecce'),
