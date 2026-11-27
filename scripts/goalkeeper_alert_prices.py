@@ -8,6 +8,7 @@ from football_grosvenor import team_key
 from goalkeeper_price_selection import contract_key, current_offers, normalized, number, stamp
 from moviodds_gk_verification import reconcile
 from moviodds_prices import soccer_target_matches
+from paddy_keeper_prices import matching_paddy_prices
 
 
 MAX_AGE = timedelta(minutes=10)
@@ -27,8 +28,14 @@ def read_capture(path):
 
 def load_sources(folder):
     aerial = folder.parent / 'aerial'
+    try:
+        status = json.loads((folder / 'gk-saves-capture-status.json').read_text(encoding='utf-8'))
+        paddy = status.get('paddy_keeper_comparison') if isinstance(status, dict) else []
+    except (OSError, ValueError):
+        paddy = []
     return (read_capture(folder / 'moviodds-direct-latest.json.gz'),
-            read_capture(aerial / 'calendar.json.gz'), read_capture(aerial / 'heights.json.gz'))
+            read_capture(aerial / 'calendar.json.gz'), read_capture(aerial / 'heights.json.gz'),
+            paddy if isinstance(paddy, list) else [])
 
 
 def fixture_team_ids(row, calendar, now):
@@ -112,7 +119,7 @@ def paired_prices(row, offers, now, sources):
     fair = number(row.get('fair_odds'))
     if not key or not kickoff or kickoff <= now or fair is None or fair <= 1:
         return []
-    packet, calendar, roster = sources
+    packet, calendar, roster = sources[:3]
     team_ids = fixture_team_ids(row, calendar, now)
     venue = row.get('venue') or str(row.get('contract_scope') or '').removeprefix('team_goalkeeper_')
     if venue not in team_ids:
@@ -121,6 +128,8 @@ def paired_prices(row, offers, now, sources):
     quotes = []
     leagues = set()
     for offer in current_offers(offers, now):
+        if offer['bookmaker'].casefold() == 'paddy power':
+            continue  # Use the fresh full-match snapshot, including the bookmaker update time.
         other = contract_key(offer)
         if (other[0] != key[0] or other[2:] != key[2:] or stamp(offer.get('kickoff_at')) != kickoff
                 or now-stamp(offer['captured_at']) > MAX_AGE
@@ -154,6 +163,16 @@ def paired_prices(row, offers, now, sources):
         unique.append(min(group, key=lambda q:q['observed_only']))
     if not {'bet365','grosvenor'} <= {q['bookmaker'].casefold() for q in unique}:
         return []
+    if len(sources) > 3:
+        names = {normalized(q['goalkeeper']) for q in unique if q['bookmaker'].casefold() == 'bet365' and q['goalkeeper']}
+        team_side = str(row.get('contract_scope') or '').removeprefix('team_goalkeeper_')
+        paddy = matching_paddy_prices(row, sources[3], names, team_side if team_side in ('home','away') else venue, now)
+        by_contract = {}
+        for q in paddy:
+            by_contract.setdefault((q['contract_scope'], normalized(q['goalkeeper'])), []).append(q)
+        for group in by_contract.values():
+            if len({q['odds'] for q in group}) == 1:
+                unique.append(max(group, key=lambda q:stamp(q['captured_at'])))
     return sorted(unique, key=lambda q:(-q['odds'], q['bookmaker'], q['goalkeeper']))
 
 
@@ -179,4 +198,6 @@ def format_prices(row, *, rich=True):
             book, name, price = html.escape(book), html.escape(name), f'<b>{price}</b>'
         observed = stamp(q['captured_at']).astimezone(timezone.utc).strftime('%H:%M')
         lines.append(f"{book} · {name} · {price} · EV {ev:+.1f}%{label} · {observed} UTC")
+    if all(q['bookmaker'].casefold() != 'paddy power' for q in quotes):
+        lines.append('Paddy Power · no fresh matching odds')
     return '\n'.join(lines)+'\n'

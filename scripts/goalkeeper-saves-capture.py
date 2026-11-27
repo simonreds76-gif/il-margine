@@ -19,6 +19,7 @@ from typing import Any
 import requests
 
 from aerial_market_capture import retain_headed_markets
+from paddy_keeper_prices import capture_paddy_prices
 
 from football_count_markets import (
     append_market_inventory,
@@ -524,6 +525,7 @@ def main() -> None:
         "market_inventory_rows_added": inventory_added,
         "market_names_observed": market_names,
         "bookmaker_coverage": save_market_coverage(payload, args.bookmaker, moviodds_health),
+        "paddy_keeper_comparison": capture_paddy_prices(payload, datetime.now(UTC)),
         "capture_mode": capture_mode,
         "publication_recovery": publication_recovery,
         "last_publication_at": captured_at if capture_mode == "publication" else previous.get("last_publication_at"),
