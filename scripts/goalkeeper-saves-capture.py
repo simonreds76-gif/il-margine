@@ -537,6 +537,10 @@ def main() -> None:
         ],
     }
     args.status.parent.mkdir(parents=True, exist_ok=True)
+    if previous.get('first_paddy_keeper_observation'):
+        status['first_paddy_keeper_observation'] = previous['first_paddy_keeper_observation']
+    elif status['paddy_keeper_comparison']:
+        status['first_paddy_keeper_observation'] = status['paddy_keeper_comparison'][0]
     args.status.write_text(json.dumps(status, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(status, sort_keys=True))
 

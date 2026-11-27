@@ -140,11 +140,13 @@ class BestPrices(unittest.TestCase):
             saved=json.loads(statefile.read_text())['signals'][r['signal_id']]
             self.assertEqual(saved['suppression_reason'], 'better_bookmaker_price_available')
 
-    def test_paper_keeper_watch_remains_separate_from_current_model(self):
+    def test_paper_keeper_watch_sends_a_distinct_pick_only(self):
         current=self.row(); state={'signals':{current['signal_id']:{'status':'sent','signal':current}}}
         watch=dict(current, alert_model='keeper_watch_v1', signal_id='keeper_watch_v1:42',
                    selection_policy='keeper_watch_v1', paper_stake=.5, actual_stake=0)
-        self.assertEqual(alerts.claim([watch],state,'x:1',self.now,[current]),1)
+        self.assertEqual(alerts.claim([watch],state,'x:1',self.now,[current]),0)
+        different = {**watch, 'line':'3.5'}
+        self.assertEqual(alerts.claim([different],state,'x:1',self.now,[different]),1)
 
     def test_unnamed_team_signal_does_not_resend_when_keeper_is_identified(self):
         side=self.row('Kambi',2.23,goalkeeper='Away goalkeeper',identity_basis='bookmaker_team_side',lineup_status='team_contract_name_unconfirmed')

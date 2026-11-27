@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from goalkeeper_alert_prices import paired_prices, format_prices
 from goalkeeper_quote_integrity import verified_quote
 from paddy_keeper_prices import capture_paddy_prices
+from goalkeeper_delivery import digest_keys, pick_keys, telegram_text_matches
 
 
 def script(name):
@@ -87,6 +88,65 @@ class AlertPair(unittest.TestCase):
         digest = script('football-daily-signal-digest')
         candidates = digest.goalkeeper_candidates([self.row],self.row['match_date'],now=self.now,sources=self.sources)
         self.assertIn('Paddy Power · team keeper · 2.64', digest.candidate_block(candidates[0]))
+
+    def test_three_book_telegram_echo_and_cross_publisher_replay(self):
+        import html
+        import re
+        from unittest.mock import Mock
+        market = dict(name='Goalkeeper To Make 3 Or More Saves', updatedAt=self.now.isoformat(),
+                      odds=[dict(home='4.50', away='2.64')])
+        sources = self.sources + (self.paddy_capture([market]),)
+        alerts, digest = script('goalkeeper-saves-alerts'), script('football-daily-signal-digest')
+        groups = {'GK':digest.goalkeeper_candidates([self.row],self.row['match_date'],now=self.now,sources=sources)}
+        candidate = groups['GK'][0]
+        env = dict(GITHUB_RUN_ID='run',GITHUB_RUN_ATTEMPT='1',OPS_ALERT_TELEGRAM_BOT_TOKEN='test',OPS_ALERT_TELEGRAM_CHAT_ID='test')
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ,env):
+            root = Path(directory)
+            keepers, football = root/'goalkeeper-saves', root/'football-form'
+            keepers.mkdir()
+            football.mkdir()
+            state, board = keepers/'gk-saves-telegram-state.json',keepers/'candidates.csv'
+            digest_state = football/'football-daily-signal-digest-state.json'
+            with board.open('w',newline='',encoding='utf8') as f:
+                writer=csv.DictWriter(f,self.row)
+                writer.writeheader()
+                writer.writerow(self.row)
+            before = {}
+            alerts.claim([self.row],before,'run:1',self.now,[self.row],sources)
+            state.write_text(json.dumps(before),encoding='utf8')
+            def acknowledge(*args, **kwargs):
+                text = html.unescape(re.sub('<[^>]+>', '', kwargs['json']['text']))
+                for expected in ('Over 2.5 saves','Fair odds at capture: 2.20','Paddy Power · team keeper · 2.64 · EV +20.0%',
+                                 'Bet365 · Keeper B · 2.375 · EV +8.0%', 'Grosvenor · team keeper · 2.35 · EV +6.8%'):
+                    self.assertIn(expected,text)
+                return Mock(ok=True,json=lambda:{'ok':True,'result':{'message_id':13,'text':text}})
+            with patch.object(alerts,'load_sources',return_value=sources), patch.object(alerts,'datetime') as clock, \
+                 patch.object(sys,'argv',['alerts','--send','--state',str(state),'--candidates',str(board)]), \
+                 patch.object(alerts.requests,'post',side_effect=acknowledge) as send:
+                clock.now.return_value=self.now
+                clock.fromisoformat=datetime.fromisoformat
+                alerts.main()
+                alerts.main()
+                send.assert_called_once()
+            sent = json.loads(state.read_text())['signals']
+            self.assertIs(sent['abc']['three_book_text_verified'],True)
+            self.assertEqual(digest.unseen_candidates(groups,{},sent)['GK'],[])
+            # Replay from the other direction, including two rows describing one pick.
+            state.write_text(json.dumps({'signals':{}}),encoding='utf8')
+            with patch.object(sys,'argv',['digest','--state',str(digest_state),'--date',self.row['match_date']]), \
+                 patch.object(digest,'build_candidates',return_value={'GK':[candidate,candidate]}), \
+                 patch.object(digest,'publish_keeper_claim') as reserve, \
+                 patch.object(digest,'send_telegram',side_effect=lambda body,*args:{'message_id':14,'text':body}) as send:
+                digest.main()
+                digest.main()
+                reserve.assert_called_once()
+                send.assert_called_once()
+                self.assertEqual(send.call_args.args[0].count('Paddy Power ·'),1)
+            receipts=json.loads(digest_state.read_text())['sent']
+            self.assertTrue(receipts[candidate['id']]['three_book_text_verified'])
+            self.assertEqual(alerts.claim([self.row],{},'again',self.now,[self.row],sources,digest_keys(receipts)),0)
+            self.assertTrue(pick_keys(self.row) & digest_keys({candidate['id']:{'status':'uncertain'}}))
+            self.assertFalse(telegram_text_matches({'message_id':15,'text':'missing odds'},'expected complete text'))
 
     def test_paddy_rejects_unmatched_stale_suspended_and_conflicting_odds(self):
         market = dict(name='Player Saves', updatedAt=self.now.isoformat(),
