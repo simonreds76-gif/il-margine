@@ -27,7 +27,7 @@ class Missing(Exception):
 
 
 class Reads:
-    def __init__(self, api, max_reads=320, seconds=1200):
+    def __init__(self, api, max_reads=220, seconds=1200):
         self.api = api
         self.calls = 0
         self.max_reads = max_reads
@@ -43,11 +43,16 @@ class Reads:
         except RemoteError as exc:
             if exc.status_code in (401, 403, 429):
                 self.stopped = f"provider HTTP {exc.status_code}"
-            raise Missing(self.stopped or f"{name} unavailable") from None
-        except (RuntimeError, ValueError, requests.RequestException, StopIteration):
-            raise Missing(f"{name} unavailable") from None
-        if not isinstance(doc, dict) or doc.get("error"):
-            raise Missing(f"{name} unavailable")
+            raise Missing(self.stopped or f"{name} unavailable (HTTP {exc.status_code})") from None
+        except (RuntimeError, ValueError, requests.RequestException, StopIteration) as exc:
+            raise Missing(f"{name} unavailable ({type(exc).__name__})") from None
+        if not isinstance(doc, dict):
+            raise Missing(f"{name} did not return an object")
+        if doc.get("error"):
+            description = str(doc["error"]).lower()
+            if any(term in description for term in ("rate limit", "quota exceeded", "daily limit", "too many requests")):
+                self.stopped = "provider allowance reached"
+            raise Missing(self.stopped or f"{name} returned an error")
         return doc
 
 
@@ -83,7 +88,7 @@ def discover(reader, start, end):
     while True:
         try:
             doc = reader.read("getRefereesList", upcomingFixturesOnly=True, last20GamesOnly=True,
-                              sortField="next_game_timestamp", sortDirection="asc", minGames=0, limit=20, page=page)
+                              sortField="next_game_timestamp", sortDirection="asc", minGames=0, limit=30, page=page)
             pagination = doc.get("pagination", {})
             if pagination.get("page") != page or not isinstance(doc.get("data"), list):
                 raise Missing("assignment index incomplete")
@@ -97,7 +102,9 @@ def discover(reader, start, end):
                     f = dict(id=ref["nextMatchId"], home=m[1], away=m[2], league=m[3],
                              ko=ko.isoformat(), core=False, indexYellows=ref.get("yellowsPerGame"))
                     if senior_fixture(f):
-                        games.setdefault(identity(f["id"]), f)
+                        existing = games.setdefault(identity(f["id"]), f)
+                        if existing["ko"] == f["ko"] and all(norm(existing[s]) == norm(f[s]) for s in ("home","away")):
+                            existing["indexYellows"] = ref.get("yellowsPerGame")
             if not pagination.get("hasNextPage"):
                 break
             if not doc["data"]:
