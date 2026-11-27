@@ -1,15 +1,15 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-27T18:28:52Z",
+  "generated_at": "2026-11-27T19:28:20Z",
   "source_status": {
-    "compared_at": "2026-11-27T18:26:34Z",
-    "hot_live_updated_at": "2026-11-27T03:14:30Z",
-    "expected_refresh_updated_at": "2026-11-27T18:26:34Z",
-    "settlement_updated_at": "2026-11-27T18:28:51Z",
-    "scheduler_heartbeat_at": "2026-11-27T03:14:30Z",
-    "snapshot_generated_at": "2026-11-27T18:28:52Z",
-    "live_status_state": "skipped",
-    "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
+    "compared_at": "2026-11-27T19:28:13Z",
+    "hot_live_updated_at": "2026-11-27T19:28:20Z",
+    "expected_refresh_updated_at": "2026-11-27T19:28:13Z",
+    "settlement_updated_at": "2026-11-27T19:27:09.258879+00:00",
+    "scheduler_heartbeat_at": "2026-11-27T19:28:20Z",
+    "snapshot_generated_at": "2026-11-27T19:28:20Z",
+    "live_status_state": "idle",
+    "live_status_message": "Goalscorer live poll finished (3 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,12 +18,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-27T18:28:24Z",
-      "live_rows": 521,
+      "updated_at": "2026-11-27T19:27:36Z",
+      "live_rows": 583,
       "public_now": 0,
       "shadow_now": 0,
       "clean_fixtures": 0,
-      "degraded_fixtures": 8,
+      "degraded_fixtures": 9,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 40,
@@ -49,8 +49,8 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-27T18:28:28Z",
-      "live_rows": 460,
+      "updated_at": "2026-11-27T19:27:55Z",
+      "live_rows": 438,
       "public_now": 0,
       "shadow_now": 0,
       "clean_fixtures": 0,
@@ -80,8 +80,8 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-27T18:28:31Z",
-      "live_rows": 603,
+      "updated_at": "2026-11-27T19:28:13Z",
+      "live_rows": 581,
       "public_now": 0,
       "shadow_now": 0,
       "clean_fixtures": 0,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-27T18:28:35Z",
+      "updated_at": "2026-11-27T19:27:03Z",
       "live_rows": 479,
       "public_now": 0,
       "shadow_now": 0,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-11-27T18:28:40Z",
+      "updated_at": "2026-11-27T19:27:03Z",
       "live_rows": 515,
       "public_now": 0,
       "shadow_now": 0,
@@ -304,6 +304,24 @@
         "match_date": "2026-11-29",
         "home_team": "Udinese Calcio",
         "away_team": "ACF Fiorentina",
+        "competition": "Italy - Serie A",
+        "bookmaker": "Grosvenor",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      {
+        "key": "serie-a|2026-11-30|lecce|atalanta",
+        "league_key": "serie-a",
+        "league_label": "Serie A",
+        "match_date": "2026-11-30",
+        "home_team": "US Lecce",
+        "away_team": "Atalanta BC",
         "competition": "Italy - Serie A",
         "bookmaker": "Grosvenor",
         "lineup_input": "none",
@@ -983,9 +1001,9 @@
       }
     ],
     "clean_count": 0,
-    "degraded_count": 45,
+    "degraded_count": 46,
     "quarantined_count": 0,
-    "hidden_pending_count": 45,
+    "hidden_pending_count": 46,
     "hidden_expected_count": 0,
     "flagged_rows": []
   },
@@ -1000,7 +1018,7 @@
       "bookmaker": "Grosvenor",
       "home_team": "Venezia FC",
       "away_team": "Bologna FC",
-      "matched_player_prices": 28,
+      "matched_player_prices": 20,
       "health": {
         "key": "serie-a|2026-11-27|venezia fc|bologna",
         "league_key": "serie-a",
@@ -1385,7 +1403,7 @@
       "bookmaker": "Paddy Power",
       "home_team": "Torino FC",
       "away_team": "Lazio Rome",
-      "matched_player_prices": 37,
+      "matched_player_prices": 36,
       "health": {
         "key": "serie-a|2026-11-28|torino|lazio",
         "league_key": "serie-a",
@@ -1660,7 +1678,7 @@
       "bookmaker": "Paddy Power",
       "home_team": "AS Roma",
       "away_team": "AC Monza",
-      "matched_player_prices": 40,
+      "matched_player_prices": 39,
       "health": {
         "key": "serie-a|2026-11-29|roma|ac monza",
         "league_key": "serie-a",
@@ -1871,6 +1889,116 @@
       "has_any_lineup": false
     },
     {
+      "key": "2026-11-30|Grosvenor|US Lecce|Atalanta BC",
+      "league_key": "serie-a",
+      "league_label": "Serie A",
+      "competition": "Italy - Serie A",
+      "match_date": "2026-11-30",
+      "kickoff": "2026-11-30",
+      "bookmaker": "Grosvenor",
+      "home_team": "US Lecce",
+      "away_team": "Atalanta BC",
+      "matched_player_prices": 34,
+      "health": {
+        "key": "serie-a|2026-11-30|lecce|atalanta",
+        "league_key": "serie-a",
+        "league_label": "Serie A",
+        "match_date": "2026-11-30",
+        "home_team": "US Lecce",
+        "away_team": "Atalanta BC",
+        "competition": "Italy - Serie A",
+        "bookmaker": "Grosvenor",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      "home": {
+        "team": "US Lecce",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "away": {
+        "team": "Atalanta BC",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "has_any_lineup": false
+    },
+    {
+      "key": "2026-11-30|Paddy Power|US Lecce|Atalanta BC",
+      "league_key": "serie-a",
+      "league_label": "Serie A",
+      "competition": "Italy - Serie A",
+      "match_date": "2026-11-30",
+      "kickoff": "2026-11-30",
+      "bookmaker": "Paddy Power",
+      "home_team": "US Lecce",
+      "away_team": "Atalanta BC",
+      "matched_player_prices": 38,
+      "health": {
+        "key": "serie-a|2026-11-30|lecce|atalanta",
+        "league_key": "serie-a",
+        "league_label": "Serie A",
+        "match_date": "2026-11-30",
+        "home_team": "US Lecce",
+        "away_team": "Atalanta BC",
+        "competition": "Italy - Serie A",
+        "bookmaker": "Grosvenor",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      "home": {
+        "team": "US Lecce",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "away": {
+        "team": "Atalanta BC",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "has_any_lineup": false
+    },
+    {
       "key": "2026-11-27|Grosvenor|Nottingham Forest|Chelsea FC",
       "league_key": "epl",
       "league_label": "Premier League",
@@ -1880,7 +2008,7 @@
       "bookmaker": "Grosvenor",
       "home_team": "Nottingham Forest",
       "away_team": "Chelsea FC",
-      "matched_player_prices": 25,
+      "matched_player_prices": 19,
       "health": {
         "key": "epl|2026-11-27|nottingham forest|chelsea",
         "league_key": "epl",
@@ -1935,7 +2063,7 @@
       "bookmaker": "Paddy Power",
       "home_team": "Nottingham Forest",
       "away_team": "Chelsea FC",
-      "matched_player_prices": 35,
+      "matched_player_prices": 19,
       "health": {
         "key": "epl|2026-11-27|nottingham forest|chelsea",
         "league_key": "epl",
@@ -2980,7 +3108,7 @@
       "bookmaker": "Grosvenor",
       "home_team": "Levante UD",
       "away_team": "Racing Santander",
-      "matched_player_prices": 26,
+      "matched_player_prices": 18,
       "health": {
         "key": "la-liga|2026-11-27|levante|racing santander",
         "league_key": "la-liga",
@@ -3035,7 +3163,7 @@
       "bookmaker": "Paddy Power",
       "home_team": "Levante UD",
       "away_team": "Racing Santander",
-      "matched_player_prices": 32,
+      "matched_player_prices": 18,
       "health": {
         "key": "la-liga|2026-11-27|levante|racing santander",
         "league_key": "la-liga",
@@ -5832,7 +5960,7 @@
     }
   ],
   "penalty_watchlist": {
-    "generated_at": "2026-11-27T18:28:51Z",
+    "generated_at": "2026-11-27T19:27:09.258879+00:00",
     "row_count": 10,
     "rows": [
       {
@@ -5984,12 +6112,12 @@
         "primary_pre_match": "Franck Kessié",
         "secondary_pre_match": "Éderson",
         "tertiary_pre_match": "Gianluca Scamacca",
-        "primary_lineup_status": "",
-        "secondary_lineup_status": "",
-        "tertiary_lineup_status": "",
+        "primary_lineup_status": "unknown",
+        "secondary_lineup_status": "unknown",
+        "tertiary_lineup_status": "unknown",
         "active_taker_pre_match": "",
         "active_slot_pre_match": "",
-        "team_lineup_status": "",
+        "team_lineup_status": "unknown",
         "penalty_transfer_pre_match": 0,
         "inherited_from_pre_match": "",
         "transfer_level_pre_match": "",
@@ -7881,25 +8009,25 @@
     "recent_rows": []
   },
   "diagnostics": {
-    "matched_rows": 2578,
+    "matched_rows": 2596,
     "suppressed_rows": 0,
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_xis": 0,
-    "history_mapped_rows": 2578,
+    "history_mapped_rows": 2596,
     "roster_mapped_rows": 0,
-    "fallback_rows": 70,
-    "low_confidence_rows": 513,
-    "missing_player_history_rows": 458,
+    "fallback_rows": 74,
+    "low_confidence_rows": 498,
+    "missing_player_history_rows": 446,
     "starter_rows": 0,
     "expected_starter_rows": 0,
-    "avg_ev_pct": -51.95595197827776,
+    "avg_ev_pct": -51.09638755778124,
     "source_feed_gap_leagues": [],
-    "raw_monitor_summary": "=== Serie A | Updated 27/11/2026, 18:26 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T17:00:17Z\n\nHistorical Rows          33,711\nOdds Rows                581\nMatched Rows             521\nMissing Player History   60\nMissing Team Mapping     0\nFallback Rows            17\nQualified Rows           38\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   413\nLow Confidence Rows      108\nPublic High Signals      0\nPublic Caveat Signals    30\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        8\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.5445\n\n\n=== Premier League | Updated 27/11/2026, 18:26 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T17:00:35Z\n\nHistorical Rows          32,984\nOdds Rows                545\nMatched Rows             460\nMissing Player History   85\nMissing Team Mapping     0\nFallback Rows            3\nQualified Rows           57\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   421\nLow Confidence Rows      39\nPublic High Signals      0\nPublic Caveat Signals    52\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        10\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.4044\n\n\n=== La Liga | Updated 27/11/2026, 18:26 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T17:00:54Z\n\nHistorical Rows          35,048\nOdds Rows                732\nMatched Rows             603\nMissing Player History   129\nMissing Team Mapping     0\nFallback Rows            16\nQualified Rows           42\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   469\nLow Confidence Rows      134\nPublic High Signals      0\nPublic Caveat Signals    39\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.5896\n\n\n=== Bundesliga | Updated 27/11/2026, 18:26 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T17:01:02Z\n\nHistorical Rows          27,248\nOdds Rows                558\nMatched Rows             479\nMissing Player History   79\nMissing Team Mapping     0\nFallback Rows            13\nQualified Rows           32\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   381\nLow Confidence Rows      98\nPublic High Signals      0\nPublic Caveat Signals    30\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.5530\n\n\n=== Ligue 1 | Updated 27/11/2026, 18:26 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T17:01:10Z\n\nHistorical Rows          26,834\nOdds Rows                620\nMatched Rows             515\nMissing Player History   105\nMissing Team Mapping     0\nFallback Rows            21\nQualified Rows           62\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   381\nLow Confidence Rows      134\nPublic High Signals      0\nPublic Caveat Signals    55\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.4841\n"
+    "raw_monitor_summary": "=== Serie A | Updated 27/11/2026, 19:27 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T19:27:33Z\n\nHistorical Rows          33,711\nOdds Rows                648\nMatched Rows             583\nMissing Player History   65\nMissing Team Mapping     0\nFallback Rows            21\nQualified Rows           48\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   465\nLow Confidence Rows      118\nPublic High Signals      0\nPublic Caveat Signals    42\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.5448\n\n\n=== Premier League | Updated 27/11/2026, 19:27 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T19:27:52Z\n\nHistorical Rows          32,984\nOdds Rows                519\nMatched Rows             438\nMissing Player History   81\nMissing Team Mapping     0\nFallback Rows            3\nQualified Rows           60\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   408\nLow Confidence Rows      30\nPublic High Signals      0\nPublic Caveat Signals    56\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        10\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.3757\n\n\n=== La Liga | Updated 27/11/2026, 19:28 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T19:28:11Z\n\nHistorical Rows          35,048\nOdds Rows                697\nMatched Rows             581\nMissing Player History   116\nMissing Team Mapping     0\nFallback Rows            16\nQualified Rows           50\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   463\nLow Confidence Rows      118\nPublic High Signals      0\nPublic Caveat Signals    46\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.5682\n\n\n=== Bundesliga | Updated 27/11/2026, 19:27 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T17:01:02Z\n\nHistorical Rows          27,248\nOdds Rows                558\nMatched Rows             479\nMissing Player History   79\nMissing Team Mapping     0\nFallback Rows            13\nQualified Rows           32\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   381\nLow Confidence Rows      98\nPublic High Signals      0\nPublic Caveat Signals    30\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.5530\n\n\n=== Ligue 1 | Updated 27/11/2026, 19:27 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-11-27T17:01:10Z\n\nHistorical Rows          26,834\nOdds Rows                620\nMatched Rows             515\nMissing Player History   105\nMissing Team Mapping     0\nFallback Rows            21\nQualified Rows           62\nRoster Resolved Rows     0\nHigh Confidence Rows     0\nMedium Confidence Rows   381\nLow Confidence Rows      134\nPublic High Signals      0\nPublic Caveat Signals    55\nShadow Track Rows        0\nPenalty Transfer Rows    0\nPosition Upgrade Rows    0\nRole Adjusted Rows       0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 0\nFixtures Clean           0\nFixtures Degraded        9\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    0\nExpected Bench Rows      0\nExpected Out Rows        0\nNot In Squad Rows        0\n\nAverage EV               -0.4841\n"
   },
   "research_status": {
     "status": "RESEARCH_ONLY",
     "model_variant": "v2_minutes_absolute_share_repair",
-    "updated_at": "2026-11-27T18:26:34Z",
+    "updated_at": "2026-11-27T19:27:03Z",
     "parity": {
       "decision": "PASS",
       "golden_rows": 25,
@@ -7942,5 +8070,5 @@
     }
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "29cee018e84d0d959e495e475294f6afb9f4c222bcf015cbc3478e3affb45390"
+  "payload_hash": "94dd69eca3d3337b9471119d339355ea21e4a17a0913f15cb80f8f458bc68bf2"
 }
