@@ -1,6 +1,6 @@
 # Team-Shots CLV Monitor: `team_shots_v4`
 
-Generated: 2026-11-26T18:29:47Z
+Generated: 2026-11-27T18:17:16Z
 Picks input: `data/football-form/team-shots-v4-shadow-signals.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
@@ -18,7 +18,7 @@ Odds input: `data/team-shots/team-shots-odds-history.csv`
 - Active side mix: Over 20 / Under 51
 - Registered Over vig allocation: 85.6% (descriptive refits must not alter the lock)
 - Hard-guard blocked: 0
-- Average published-to-close CLV: +0.22%
+- Average published-to-close CLV: +0.17%
 - Allowed-league config valid: yes
 - Allowed leagues: `bundesliga, epl, la-liga, ligue-1, serie-a`
 - Config error: `-`

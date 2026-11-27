@@ -1,17 +1,17 @@
 {
   "bookmaker_coverage": {
     "Bet365": {
-      "events_with_observed_save_markets": 23,
+      "events_with_observed_save_markets": 17,
       "events_with_save_markets": 0,
       "named_player_lines": 0,
       "status": "SAVE_MARKETS_SEEN_NO_VERIFIED_PRICES",
       "unnamed_or_team_lines": 0
     },
     "Grosvenor": {
-      "events_with_save_markets": 25,
+      "events_with_save_markets": 19,
       "named_player_lines": 0,
       "status": "UNNAMED_OR_TEAM_CONTRACTS_ONLY",
-      "unnamed_or_team_lines": 156
+      "unnamed_or_team_lines": 120
     },
     "Paddy Power": {
       "events_with_save_markets": 0,
@@ -27,51 +27,45 @@
     "deferred": [],
     "errors": [],
     "headed_goal_research": {
-      "current_quotes": 330,
+      "current_quotes": 475,
       "mapped_quotes": 0,
       "paper_selections": 0,
-      "price_or_status_changes": 134,
+      "price_or_status_changes": 51,
       "rules": "unverified"
     },
-    "matched": 25,
+    "matched": 19,
     "missing": [],
-    "requests": 30,
-    "rows": 2179
+    "requests": 24,
+    "rows": 1669
   },
   "discovery_retries": 0,
   "event_last_checked": {
-    "71945430": "2026-11-27T02:24:07Z",
-    "71945432": "2026-11-27T02:24:07Z",
-    "71945440": "2026-11-27T02:24:07Z",
-    "71945444": "2026-11-27T02:24:07Z",
-    "72036310": "2026-11-27T02:24:07Z",
-    "72036314": "2026-11-27T02:24:07Z",
-    "72036316": "2026-11-27T02:24:07Z",
-    "72036318": "2026-11-27T02:24:07Z",
-    "72036322": "2026-11-27T02:24:07Z",
-    "72036324": "2026-11-27T02:24:07Z",
-    "72221422": "2026-11-27T02:24:07Z",
-    "72221424": "2026-11-27T02:24:07Z",
-    "72221426": "2026-11-27T02:24:07Z",
-    "72221428": "2026-11-27T02:24:07Z",
-    "72478726": "2026-11-27T02:24:07Z",
-    "72478732": "2026-11-27T02:24:07Z",
-    "72478736": "2026-11-27T02:24:07Z",
-    "72478738": "2026-11-27T02:24:07Z",
-    "72478740": "2026-11-27T02:24:07Z",
-    "72513330": "2026-11-27T02:24:07Z",
-    "72513336": "2026-11-27T02:24:07Z",
-    "72513338": "2026-11-27T02:24:07Z",
-    "72513340": "2026-11-27T02:24:07Z",
-    "72513342": "2026-11-27T02:24:07Z",
-    "72513344": "2026-11-27T02:24:07Z"
+    "71945430": "2026-11-27T18:16:06Z",
+    "71945440": "2026-11-27T18:16:06Z",
+    "71945444": "2026-11-27T18:16:06Z",
+    "72036310": "2026-11-27T18:16:06Z",
+    "72036314": "2026-11-27T18:16:06Z",
+    "72221422": "2026-11-27T18:16:06Z",
+    "72221424": "2026-11-27T18:16:06Z",
+    "72221426": "2026-11-27T18:16:06Z",
+    "72221428": "2026-11-27T18:16:06Z",
+    "72478726": "2026-11-27T18:16:06Z",
+    "72478732": "2026-11-27T18:16:06Z",
+    "72478736": "2026-11-27T18:16:06Z",
+    "72478738": "2026-11-27T18:16:06Z",
+    "72513330": "2026-11-27T18:16:06Z",
+    "72513336": "2026-11-27T18:16:06Z",
+    "72513338": "2026-11-27T18:16:06Z",
+    "72513340": "2026-11-27T18:16:06Z",
+    "72513342": "2026-11-27T18:16:06Z",
+    "72513344": "2026-11-27T18:16:06Z"
   },
   "events_deferred_by_budget": 0,
-  "events_selected": 25,
-  "events_supported": 25,
-  "events_with_lines": 25,
-  "generated_at": "2026-11-27T02:24:07Z",
-  "last_publication_at": "2026-11-27T02:24:07Z",
+  "events_selected": 19,
+  "events_supported": 19,
+  "events_with_lines": 19,
+  "generated_at": "2026-11-27T18:16:06Z",
+  "last_publication_at": "2026-11-27T18:16:06Z",
   "league_coverage": {
     "bundesliga": {
       "selected": 6,
@@ -82,19 +76,19 @@
       "with_prices": 4
     },
     "la-liga": {
-      "selected": 5,
-      "with_prices": 5
-    },
-    "ligue-1": {
-      "selected": 6,
-      "with_prices": 6
-    },
-    "serie-a": {
       "selected": 4,
       "with_prices": 4
+    },
+    "ligue-1": {
+      "selected": 2,
+      "with_prices": 2
+    },
+    "serie-a": {
+      "selected": 3,
+      "with_prices": 3
     }
   },
-  "market_inventory_rows_added": 755,
+  "market_inventory_rows_added": 603,
   "market_names_observed": [
     "Anytime Assist",
     "Anytime Goalscorer",
@@ -133,9 +127,9 @@
     "errors": [],
     "excluded": {
       "conflicting_quotes": 0,
-      "fixture_not_eligible": 544,
-      "stale_or_missing_market_poll": 11,
-      "unmatched_or_unsupported_fixture": 958
+      "fixture_not_eligible": 368,
+      "stale_or_missing_market_poll": 7,
+      "unmatched_or_unsupported_fixture": 1470
     },
     "goalkeeper_coverage_status": "INCOMPLETE",
     "goalkeeper_fixture_coverage": [
@@ -143,7 +137,7 @@
         "away": "Borussia Monchengladbach",
         "event_id": "72513342",
         "home": "Werder Bremen",
-        "market_polled_at": "2026-11-27T02:22:34.669912875Z",
+        "market_polled_at": "2026-11-27T18:15:13.756754437Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559533",
@@ -167,7 +161,7 @@
         "away": "Bologna FC",
         "event_id": "71945444",
         "home": "Venezia FC",
-        "market_polled_at": "2026-11-27T02:22:35.094134849Z",
+        "market_polled_at": "2026-11-27T18:15:15.944501077Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203560055",
@@ -181,7 +175,7 @@
         "away": "Chelsea FC",
         "event_id": "72221428",
         "home": "Nottingham Forest",
-        "market_polled_at": "2026-11-27T02:22:34.242313228Z",
+        "market_polled_at": "2026-11-27T18:12:47.913058686Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559280",
@@ -195,7 +189,7 @@
         "away": "Racing Santander",
         "event_id": "72478736",
         "home": "Levante UD",
-        "market_polled_at": "2026-11-27T02:22:35.158788995Z",
+        "market_polled_at": "2026-11-27T18:15:15.950582103Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203561169",
@@ -209,7 +203,7 @@
         "away": "Rayo Vallecano",
         "event_id": "72478726",
         "home": "Real Betis Seville",
-        "market_polled_at": "2026-11-27T02:21:59.973923219Z",
+        "market_polled_at": "2026-11-27T18:13:40.069839762Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203561148",
@@ -223,7 +217,7 @@
         "away": "Parma Calcio",
         "event_id": "71945430",
         "home": "Frosinone Calcio",
-        "market_polled_at": "2026-11-27T02:21:51.832130049Z",
+        "market_polled_at": "2026-11-27T18:13:37.001912517Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203560058",
@@ -237,7 +231,7 @@
         "away": "Union Berlin",
         "event_id": "72513336",
         "home": "FSV Mainz",
-        "market_polled_at": "2026-11-27T02:21:48.189929835Z",
+        "market_polled_at": "2026-11-27T18:13:35.546524428Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559556",
@@ -251,7 +245,7 @@
         "away": "Bayern Munich",
         "event_id": "72513338",
         "home": "Hamburger SV",
-        "market_polled_at": "2026-11-27T02:21:48.345072182Z",
+        "market_polled_at": "2026-11-27T18:13:36.969685917Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559542",
@@ -265,7 +259,7 @@
         "away": "SV 07 Elversberg",
         "event_id": "72513340",
         "home": "1. FC Cologne",
-        "market_polled_at": "2026-11-27T02:21:46.225332576Z",
+        "market_polled_at": "2026-11-27T18:13:36.689478662Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559538",
@@ -279,7 +273,7 @@
         "away": "Schalke 04",
         "event_id": "72513344",
         "home": "SC Paderborn 07",
-        "market_polled_at": "2026-11-27T02:21:48.459075496Z",
+        "market_polled_at": "2026-11-27T18:13:36.988657568Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559562",
@@ -293,7 +287,7 @@
         "away": "Coventry City",
         "event_id": "72221424",
         "home": "Leeds United",
-        "market_polled_at": "2026-11-27T02:21:41.971281934Z",
+        "market_polled_at": "2026-11-27T18:13:31.508349893Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559283",
@@ -307,7 +301,7 @@
         "away": "Brentford FC",
         "event_id": "72221426",
         "home": "Manchester United",
-        "market_polled_at": "2026-11-27T02:21:41.959028273Z",
+        "market_polled_at": "2026-11-27T18:13:31.554328663Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559286",
@@ -321,7 +315,7 @@
         "away": "Athletic Bilbao",
         "event_id": "72478738",
         "home": "Malaga CF",
-        "market_polled_at": "2026-11-27T02:22:01.778080825Z",
+        "market_polled_at": "2026-11-27T18:13:36.022191932Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203561173",
@@ -345,7 +339,7 @@
         "away": "Lazio Rome",
         "event_id": "71945440",
         "home": "Torino FC",
-        "market_polled_at": "2026-11-27T02:21:52.684574526Z",
+        "market_polled_at": "2026-11-27T18:13:32.689383063Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203560060",
@@ -359,7 +353,7 @@
         "away": "Eintracht Frankfurt",
         "event_id": "72513330",
         "home": "VfB Stuttgart",
-        "market_polled_at": "2026-11-27T02:21:48.722693212Z",
+        "market_polled_at": "2026-11-27T18:13:36.940859192Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559566",
@@ -373,7 +367,7 @@
         "away": "Aston Villa",
         "event_id": "72221422",
         "home": "Ipswich Town",
-        "market_polled_at": "2026-11-27T02:21:42.06283389Z",
+        "market_polled_at": "2026-11-27T18:13:36.933522085Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203559288",
@@ -387,94 +381,10 @@
         "away": "Atletico Madrid",
         "event_id": "72478732",
         "home": "Elche CF",
-        "market_polled_at": "2026-11-27T02:22:00.501773522Z",
+        "market_polled_at": "2026-11-27T18:13:40.326800554Z",
         "quote_count": 0,
         "reason": "same_provider_cache_no_independent_check",
         "source_event_id": "203561160",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Strasbourg Alsace",
-        "event_id": "72036316",
-        "home": "Le Havre AC",
-        "market_polled_at": "2026-11-27T02:21:45.462412545Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203559397",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Lille OSC",
-        "event_id": "72036318",
-        "home": "Le Mans FC",
-        "market_polled_at": "2026-11-27T02:21:44.908466562Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203559399",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "ESTAC Troyes",
-        "event_id": "72036322",
-        "home": "OGC Nice",
-        "market_polled_at": "2026-11-27T02:21:44.85119624Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203559401",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "FC Lorient",
-        "event_id": "72036324",
-        "home": "Paris Saint-Germain",
-        "market_polled_at": "2026-11-27T02:21:45.67537065Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203559403",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Genoa CFC",
-        "event_id": "71945432",
-        "home": "Inter Milano",
-        "market_polled_at": "2026-11-27T02:21:52.377975199Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203560062",
-        "source_site": "com",
-        "status": "INDEPENDENT_CHECK_UNAVAILABLE",
-        "verification_exclusions": {
-          "same_provider_cache_no_independent_check": 1
-        }
-      },
-      {
-        "away": "Deportivo Alaves",
-        "event_id": "72478740",
-        "home": "Real Madrid",
-        "market_polled_at": "2026-11-27T02:22:01.237853073Z",
-        "quote_count": 0,
-        "reason": "same_provider_cache_no_independent_check",
-        "source_event_id": "203561176",
         "source_site": "com",
         "status": "INDEPENDENT_CHECK_UNAVAILABLE",
         "verification_exclusions": {
@@ -621,73 +531,25 @@
             "same_provider_cache_no_independent_check": 1
           },
           "fixture_id": "203561160"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72036316",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203559397"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72036318",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203559399"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72036322",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203559401"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72036324",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203559403"
-        },
-        {
-          "accepted": 0,
-          "event_id": "71945432",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203560062"
-        },
-        {
-          "accepted": 0,
-          "event_id": "72478740",
-          "excluded": {
-            "same_provider_cache_no_independent_check": 1
-          },
-          "fixture_id": "203561176"
         }
       ],
-      "requests": 23,
+      "requests": 17,
       "verified_quotes": 0,
       "version": "moviodds_gk_atomic_v1"
     },
-    "market_count": 16,
-    "quote_count": 1159,
-    "received_at": "2026-11-27T02:24:22.508775+00:00",
-    "requests": 24,
+    "market_count": 14,
+    "quote_count": 987,
+    "received_at": "2026-11-27T18:16:19.195262+00:00",
+    "requests": 18,
     "source": "moviodds_bet365",
     "source_site": "com",
     "status": "OK"
   },
-  "publication_recovery": true,
+  "publication_recovery": false,
   "request_budget": 4,
-  "requests_used": 4,
-  "rows_added": 156,
-  "rows_observed": 156,
+  "requests_used": 3,
+  "rows_added": 120,
+  "rows_observed": 120,
   "selected_events": [
     {
       "away": "Borussia Monchengladbach",
@@ -821,50 +683,8 @@
       "home": "Elche CF",
       "id": 72478732,
       "kickoff_at": "2026-11-28T17:30:00Z"
-    },
-    {
-      "away": "Strasbourg Alsace",
-      "competition": "France - Ligue 1",
-      "home": "Le Havre AC",
-      "id": 72036316,
-      "kickoff_at": "2026-11-28T19:45:00Z"
-    },
-    {
-      "away": "Lille OSC",
-      "competition": "France - Ligue 1",
-      "home": "Le Mans FC",
-      "id": 72036318,
-      "kickoff_at": "2026-11-28T19:45:00Z"
-    },
-    {
-      "away": "ESTAC Troyes",
-      "competition": "France - Ligue 1",
-      "home": "OGC Nice",
-      "id": 72036322,
-      "kickoff_at": "2026-11-28T19:45:00Z"
-    },
-    {
-      "away": "FC Lorient",
-      "competition": "France - Ligue 1",
-      "home": "Paris Saint-Germain",
-      "id": 72036324,
-      "kickoff_at": "2026-11-28T19:45:00Z"
-    },
-    {
-      "away": "Genoa CFC",
-      "competition": "Italy - Serie A",
-      "home": "Inter Milano",
-      "id": 71945432,
-      "kickoff_at": "2026-11-28T19:45:00Z"
-    },
-    {
-      "away": "Deportivo Alaves",
-      "competition": "Spain - LaLiga",
-      "home": "Real Madrid",
-      "id": 72478740,
-      "kickoff_at": "2026-11-28T20:00:00Z"
     }
   ],
   "status": "CAPTURED",
-  "three_way_events": 25
+  "three_way_events": 19
 }
