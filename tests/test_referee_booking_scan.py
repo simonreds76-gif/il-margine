@@ -29,43 +29,27 @@ class BookingTests(unittest.TestCase):
         self.game = dict(home="Home", away="Away", id="fixture.abc", league="Serie A", core=True, ko=ko.isoformat())
         self.player = dict(id="p.123", player="Test Player", team="Home", side="home", lineup="predicted",
                            fouls=20,apps=10,minutes=800,perGame=2,per90=2.25)
-        self.odds = dict(context=f"Home v Away · kick-off {ko:%a %d %b %Y, %H:%M UTC} · markets",
-                         markets=[dict(name="Player to be Booked",outcomes=[dict(label="Test Player Over 0.5",
-                                       best=dict(odds=5,bookmaker="Book",ageMinutes=3))])])
-        self.history = dict(bets=[dict(player="Test Player",
-                            bet=dict(statType="yellowCards",line=.5),
-                            fixture=dict(home="Home",away="Away",isHome=True,kickoffTimestamp=int(ko.timestamp())),
-                            availability=dict(warning=None),samples=[dict(label="Last 20 starts",hits=10,starts=20)])])
-
-    def assess(self):
-        reader = Mock()
-        reader.read.side_effect = [self.odds, self.history]
-        watch.assess_players(reader, self.game, [self.player])
-        return self.player
-
     def report(self):
-        self.assess()
-        g = dict(self.game,status="reviewed",referee="Example",players=[self.player],
-                 refSample=dict(games=20,yellows=100,mean=5,first="2026-01-01",last="2026-11-20",capped=False))
-        return dict(day=str(self.now.astimezone(watch.UK).date()),preview=False,fixtures=[g],calendarGaps=[],reads=1)
+        fixture = dict(self.game, status="reviewed", referee="Example", players=[self.player],
+                       refSample=dict(games=20,yellows=80,mean=4,first="2026-01-01",last="2026-11-20",capped=False))
+        return dict(day=str(self.now.astimezone(watch.UK).date()),preview=False,fixtures=[fixture],calendarGaps=[],reads=1)
 
-    def test_strict_ref_and_booking_odds_are_separate(self):
-        p = self.assess()
-        self.assertEqual((p["decision"],p["booked"],p["starts"]),("candidate",10,20))
-        self.assertGreater(p["minimum"],2)
-        self.assertEqual(p["breakEven"],.2)
-
-    def test_no_other_player_or_line_substitution(self):
-        self.odds["markets"][0]["outcomes"][0]["label"] = "Other Player Over 0.5"
-        self.assertEqual(self.assess()["reason"], "no fresh exact booking odds")
-        self.odds["markets"][0]["outcomes"][0]["label"] = "Test Player Over 1.5"
-        self.assertEqual(self.assess()["reason"], "no fresh exact booking odds")
-
-    def test_stale_missing_or_wrong_side_evidence(self):
-        self.odds["markets"][0]["outcomes"][0]["best"]["ageMinutes"] = 61
-        self.assertEqual(self.assess()["reason"],"no fresh exact booking odds")
-        self.history["bets"][0]["fixture"]["isHome"] = False
-        self.assertIn("unverified",self.assess()["reason"])
+    def test_foul_leaders_are_returned_without_any_odds_or_booking_reads(self):
+        data = {"matches":{"id":self.game["id"],"status":"scheduled",
+                           "kickoffTimestamp":int(datetime.fromisoformat(self.game["ko"]).timestamp())},
+                "homeTeam":{"id":"home","name":"Home"},"awayTeam":{"id":"away","name":"Away"},
+                "referees":{"id":"ref","name":"Example"}}
+        reader = Mock()
+        reader.read.return_value = {"data":data}
+        with patch.object(watch,"rank_players",return_value=([self.player],20)) as rank:
+            result = watch.analyse(reader,self.game,self.now,{"ref":{"games":20,"mean":4}})
+            self.assertEqual(result,"reviewed")
+            self.assertEqual(self.game["players"],[self.player])
+            rank.assert_called_once()
+            reader.read.assert_called_once_with("getMatchDetails",matchId=self.game["id"])
+            self.assertEqual(watch.analyse(reader,self.game,self.now,{"ref":{"games":20,"mean":3.99}}),
+                             "below referee threshold")
+            self.assertEqual(rank.call_count,1)
 
     def test_dated_referee_history(self):
         reader = Mock()
@@ -124,15 +108,18 @@ class BookingTests(unittest.TestCase):
         report=self.report()
         ps=report["fixtures"][0]["players"]
         for i in range(1,5):
-            ps.append(dict(ps[0],id=str(i),player=f"Runner {i}",ratio=10-i))
+            ps.append(dict(ps[0],id=str(i),player=f"Runner {i}",perGame=10-i))
         report["fixtures"].append(dict(self.game,status="no assigned referee"))
         caption,body,n=watch.digest(report,self.now)
         self.assertEqual(n,5)
-        self.assertEqual(caption.count("to be booked @"),3)
+        self.assertEqual(caption.count(" fouls in "),3)
+        self.assertIn("Runner 1",caption)
+        self.assertNotIn("Runner 4",caption)
+        self.assertNotIn("odds",body.lower())
         self.assertIn("Runner 4",body)
         self.assertIn("1 incomplete",caption)
         self.assertLess(len(caption.encode("utf-16-le"))//2,1024)
-        self.assertEqual(watch.digest(report,self.now+timedelta(hours=2))[2],0)
+        self.assertEqual(watch.digest(report,self.now+timedelta(hours=4))[2],0)
 
     def test_save_then_deliver_once(self):
         report=self.report()
