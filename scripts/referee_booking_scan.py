@@ -1,8 +1,7 @@
-"""Daily private referee screen. The ranking is a shortlist, not a fitted price model."""
+"""List the leading foul committers in upcoming matches assigned to high-booking referees."""
 import argparse
 from collections import Counter
 from datetime import date, datetime, time, timedelta, timezone
-import math
 import os
 import re
 from time import monotonic
@@ -10,15 +9,14 @@ from zoneinfo import ZoneInfo
 
 import requests
 from johnny_cards_calendar import CLOSED, ROW, senior_fixture
-from statshub_daily_contracts import LEAGUES, exact_quote, identity, norm, price_floor
+from statshub_daily_contracts import LEAGUES, identity, norm
 from statshub_daily_io import Provider, RemoteError, Store, http, payload, telegram_private
 
 UK = ZoneInfo("Europe/London")
 UTC = timezone.utc
 MIN_REF_GAMES = 10
-MIN_YELLOWS = 4.5
+MIN_YELLOWS = 4.0
 MIN_MINUTES = 270
-MAX_AGE = 60
 PREFIX = "referee-bookings/v1"
 
 
@@ -194,56 +192,6 @@ def exact_fixture(f, data):
             and all(data.get(s+"Team",{}).get("id") and norm(data[s+"Team"]["name"]) == norm(f[s]) for s in ("home","away")))
 
 
-def assess_players(reader, f, players):
-    lookup = dict(matchId=f["id"], markets=["player to be booked"], line=0.5)
-    odds = reader.read("getMatchOdds", **lookup)
-    observed = datetime.now(UTC)
-    ko = datetime.fromisoformat(f["ko"])
-    header = odds.get("context","")
-    board_ok = (norm(header.split(" · ",1)[0]) == norm(f["home"]+" v "+f["away"])
-                and ko.strftime("%d %b %Y, %H:%M UTC").lstrip("0") in header and not CLOSED.search(header.split(" · markets")[0]))
-    outcomes = [o for m in odds.get("markets",[]) if m.get("name","").casefold()=="player to be booked" for o in m.get("outcomes",[])] if board_ok else []
-    try:
-        history = reader.read("checkBet", bets=[dict(matchId=f["id"],playerId=p["id"],statType="yellowCards",line=.5) for p in players])
-    except Missing:
-        history = {}
-    for p in players:
-        p["decision"] = "watch"
-        rows = [o for o in outcomes if norm(o.get("label","")) == norm(p["player"]+" Over 0.5")
-                and re.search(r" over 0\.5$",o.get("label",""),re.I)]
-        quote = exact_quote(rows[0], MAX_AGE) if len(rows)==1 else None
-        if quote:
-            p.update(quote, observed=observed.isoformat(), breakEven=1/quote["odds"])
-        evidence = []
-        for row in history.get("bets") or ([history["report"]] if isinstance(history.get("report"), dict) else []):
-            fixture = row.get("fixture") or {}
-            bet = row.get("bet") or {}
-            if (norm(row.get("player")) == norm(p["player"]) and fixture.get("kickoffTimestamp")==int(ko.timestamp())
-                    and all(norm(fixture.get(s))==norm(f[s]) for s in ("home","away"))
-                    and fixture.get("isHome") is (p["side"]=="home")
-                    and bet.get("statType")=="yellowCards" and bet.get("line")==.5):
-                evidence.append(row)
-        samples = [v for row in evidence for v in row.get("samples",[]) if v.get("label")=="Last 20 starts"]
-        if len(evidence) != 1 or len(samples)!=1 or len([r for r in players if norm(r["player"])==norm(p["player"])])!=1:
-            p["reason"] = "booking history or player identity unverified"
-            continue
-        sample = samples[0]
-        games,hits = sample.get("starts"),sample.get("hits")
-        if type(games) is not int or type(hits) is not int or not 0 <= hits <= games or not 10 <= games <= 20:
-            p["reason"] = "insufficient booking history"
-            continue
-        floor = price_floor(hits,games)
-        p.update(starts=games,booked=hits,minimum=floor if math.isfinite(floor) else None)
-        if not quote:
-            p["reason"]="no fresh exact booking odds"
-        elif (evidence[0].get("availability") or {}).get("warning"):
-            p["reason"]="availability or role warning"
-        elif quote["odds"] >= floor:
-            p.update(decision="candidate",ratio=quote["odds"]/floor)
-        else:
-            p["reason"]="odds below screen minimum"
-
-
 def analyse(reader, f, now, cache):
     if datetime.fromisoformat(f["ko"]) <= now:
         raise Missing("kickoff passed")
@@ -264,7 +212,6 @@ def analyse(reader, f, now, cache):
     teams = {s:data[s+"Team"] for s in ("home","away")}
     players, count = rank_players(reader, f, data, teams)
     f.update(players=players, eligibleStarters=count)
-    assess_players(reader,f,players)
     return "reviewed"
 
 
@@ -288,73 +235,60 @@ def screen(reader, day, preview=False):
 
 
 def digest(report, now):
-    candidates = []
+    leaders = []
     statuses = Counter()
-    player_coverage = Counter()
-    detail = []
-    for f in report["fixtures"]:
-        ko = datetime.fromisoformat(f["ko"])
-        title = f"{f['home']} v {f['away']}"
-        header = f"{ko.astimezone(UK):%a %H:%M UK} | {f['league']} | {title}"
-        statuses[f["status"]] += 1
-        detail.extend(["", header, f["status"]])
-        sample = f.get("refSample")
+    details = []
+    for fixture in report["fixtures"]:
+        kickoff = datetime.fromisoformat(fixture["ko"])
+        statuses[fixture["status"]] += 1
+        details.extend(["", f"{kickoff.astimezone(UK):%a %H:%M UK} · {fixture['league']} · "
+                        f"{fixture['home']} v {fixture['away']}", fixture["status"]])
+        sample = fixture.get("refSample")
         if sample:
-            suffix = " (latest 50 only)" if sample["capped"] else ""
-            detail.append(f"{f['referee']}: {sample['yellows']} yellows in {sample['games']} matches"
-                          f" ({sample['mean']:.2f}/match), {sample['first']} to {sample['last']}{suffix}")
-        if "eligibleStarters" in f:
-            detail.append(f"{f['eligibleStarters']}/22 starters with eligible foul history")
-        for p in f.get("players", []):
-            reason = p.get("reason", "incomplete player evidence")
-            odds = "odds unavailable"
-            if "odds" in p:
-                elapsed = max(0, (now-datetime.fromisoformat(p["observed"])).total_seconds()/60)
-                age = p["age"] + elapsed
-                odds = f"{p['odds']:.2f} {p['book']} ({math.ceil(age)} min old at digest)"
-                if p["decision"] == "candidate":
-                    if ko <= now:
-                        reason = "kickoff passed before delivery"
-                    elif age > MAX_AGE:
-                        reason = "odds expired before delivery"
-                    else:
-                        reason = "shortlisted"
-                        candidates.append((p, f))
-            player_coverage[reason] += 1
-            history = f"{p['booked']}/{p['starts']} booked" if "starts" in p else "booking sample unavailable"
-            floor = f" | screening minimum {p['minimum']:.2f}" if p.get("minimum") else ""
-            detail.append(f"  {p['player']} ({p['lineup']}): {p['fouls']} fouls in {p['apps']} appearances,"
-                          f" {p['perGame']:.2f}/game, {p['per90']:.2f}/90 | {history} | {odds}{floor} | {reason}")
-    candidates.sort(key=lambda pair:(-pair[0]["ratio"], -pair[0]["starts"], pair[1]["ko"], pair[0]["id"]))
-    headline = f"Booking watch · {date.fromisoformat(report['day']):%a %d %b}"
+            details.append(f"{fixture['referee']} · {sample['yellows']} yellows in {sample['games']} matches "
+                           f"({sample['mean']:.2f}/match), {sample['first']} to {sample['last']}")
+        if "eligibleStarters" in fixture:
+            details.append(f"{fixture['eligibleStarters']}/22 starters with qualifying foul records")
+        if fixture["status"] != "reviewed":
+            continue
+        for player in fixture["players"]:
+            if kickoff > now:
+                leaders.append((player, fixture))
+            details.append(f"  {player['player']} ({player['team']}, {player['lineup']} XI) · "
+                           f"{player['fouls']} fouls committed in {player['apps']} appearances · "
+                           f"{player['perGame']:.2f}/appearance · {player['per90']:.2f}/90 · {player['minutes']} min")
+
+    leaders.sort(key=lambda entry: (-entry[0]["perGame"], -entry[0]["per90"], -entry[0]["minutes"],
+                                    entry[1]["ko"], entry[0]["id"]))
+    title = f"Player foul watch · {date.fromisoformat(report['day']):%a %d %b}"
     if report["preview"]:
-        headline += " · rehearsal"
+        title += " · rehearsal"
     reviewed = statuses["reviewed"]
     below = statuses["below referee threshold"]
-    missing = len(report["fixtures"])-reviewed-below
-    count = len(candidates)
-    coverage = f"{len(report['fixtures'])} fixtures · {reviewed} passed referee screen and reviewed · {missing} incomplete"
-    caption = [headline, f"{count} priced candidate{'s' if count != 1 else ''}" if count else "No qualifying booking odds.", coverage]
+    missing = len(report["fixtures"]) - reviewed - below
+    coverage = f"{reviewed} matches reviewed · {below} below referee cutoff · {missing} incomplete"
+    caption = [title, coverage]
     if report["calendarGaps"]:
-        caption.append("Calendar coverage incomplete. Details attached.")
-    missing_odds = player_coverage["no fresh exact booking odds"] + player_coverage["odds expired before delivery"]
-    if missing_odds:
-        caption.append(f"{missing_odds} player checks lacked fresh booking odds.")
-    for p, f in candidates[:3]:
-        ko = datetime.fromisoformat(f["ko"]).astimezone(UK)
-        caption.extend(["", f"{p['player'][:75]} to be booked @ {p['odds']:.2f} · {p['book'][:45]}",
-                        f"{f['home'][:40]} v {f['away'][:40]} · {ko:%H:%M UK} · {p['lineup']} XI",
-                        f"{p['perGame']:.1f} fouls/game · booked {p['booked']}/{p['starts']} starts · ref {f['refSample']['mean']:.2f} yellows/game"])
-    caption.append("\nFull fixture and odds checks attached.")
-    body = [headline, coverage, f"Below referee threshold: {below}. Priced candidates: {count}.",
-            "The five major domestic leagues are checked by fixture calendar. Other senior fixtures come from the worldwide next-appointment list.",
-            "A referee qualifies at 4.5 yellows per match over 10 or more dated matches in the past year (up to 50).",
-            "For each qualifying match the top three expected or confirmed starters across both teams are ranked by season fouls committed per appearance (minimum 270 minutes).",
-            "The screening minimum uses a one-sided Wilson lower bound (z=1.28) on recent booked starts, plus a 3% odds cushion. This shortlist has no verified profit record.",
-            "Decimal odds for an ordinary booking must be at most 60 minutes old. Check starting status, odds and bookmaker rules before use.",
-            "Calendar gaps: " + ("; ".join(report["calendarGaps"]) or "none reported for the checked lists"),
-            *detail]
-    return "\n".join(caption), "\n".join(body)+"\n", count
+        caption.append("Calendar coverage incomplete.")
+    if not leaders:
+        caption.append("No upcoming player foul leaders with verified data.")
+    for player, fixture in leaders[:3]:
+        kickoff = datetime.fromisoformat(fixture["ko"]).astimezone(UK)
+        sample = fixture["refSample"]
+        caption.extend(["", f"{player['player'][:50]} · {player['fouls']} fouls in {player['apps']} appearances "
+                        f"({player['perGame']:.2f}/game)",
+                        f"{fixture['home'][:28]} v {fixture['away'][:28]} · {kickoff:%H:%M UK} · {player['lineup']} XI",
+                        f"Ref {fixture['referee'][:35]} · {sample['mean']:.2f} yellows/game ({sample['games']} games)"])
+    caption.append("\nFull match-by-match list attached.")
+    body = [title, coverage,
+            f"Referee screen: at least {MIN_YELLOWS:.1f} yellow cards per match in {MIN_REF_GAMES}+ dated games "
+            "over the past year (up to 50 games, all competitions).",
+            f"Up to three likely starters per match, ranked across both teams by season fouls committed per appearance. "
+            f"Minimum {MIN_MINUTES} minutes and three appearances. Ties use fouls per 90, then minutes.",
+            "Coverage includes the five major domestic leagues and other senior fixtures listed with a referee appointment.",
+            "Calendar gaps: " + ("; ".join(report["calendarGaps"]) or "none identified in the checked lists"),
+            *details]
+    return "\n".join(caption), "\n".join(body)+"\n", len(leaders)
 
 
 def deliver(store, report, now):
@@ -372,7 +306,7 @@ def deliver(store, report, now):
         raise RuntimeError("Uncertain delivery; verify original message before repeating")
     # Keep network retries outside sendDocument: an unacknowledged send may already be visible.
     response = http.post(endpoint+"/sendDocument", data={"chat_id":chat,"caption":caption},
-                         files={"document":(f"booking-watch-{report['day']}.txt",body.encode("utf-8"),"text/plain")}, timeout=30)
+                         files={"document":(f"player-foul-watch-{report['day']}.txt",body.encode("utf-8"),"text/plain")}, timeout=30)
     msg = payload(response)
     if not msg.get("ok") or not msg.get("result",{}).get("message_id"):
         raise RuntimeError("Digest delivery not acknowledged")
@@ -406,7 +340,7 @@ def main():
     _, _, count = digest(report, datetime.now(UTC))
     statuses = Counter(f["status"] for f in report["fixtures"])
     print(f"Private report saved. Fixtures={len(report['fixtures'])}, reviewed={statuses['reviewed']}, "
-          f"below={statuses['below referee threshold']}, candidates={count}, calendar gaps={len(report['calendarGaps'])}, reads={report['reads']}")
+          f"below={statuses['below referee threshold']}, upcoming_leaders={count}, calendar gaps={len(report['calendarGaps'])}, reads={report['reads']}")
     if preview and (not report["fixtures"] or not any(f.get("refSample") for f in report["fixtures"])):
         raise RuntimeError("Rehearsal could not verify a dated referee record")
 
