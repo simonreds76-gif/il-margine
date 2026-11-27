@@ -111,10 +111,12 @@ def roundup_text(moves, observed):
         return "WTA" if move.get("tour") in ("WTA", "WTA 125") else "ATP"
     ordered=sorted(moves,key=lambda m:(circuit(m),m["start"],m["league"],m["event_id"],m["player"]))
     noun="price drop" if len(ordered)==1 else "price drops"
-    from desk_games import ALERT_POLICY, PRIOR_ALL_DAY_POLICY, PRIOR_LINE_POLICY, PRIOR_MATCH_POLICY, PRIOR_PREMATCH_500_POLICY
+    from desk_games import ALERT_POLICY, PRIOR_ALL_DAY_POLICY, PRIOR_LINE_POLICY, PRIOR_MATCH_POLICY, PRIOR_PREMATCH_500_POLICY, PRIOR_TWO_HOUR_POLICY
     all_day_policies = (PRIOR_ALL_DAY_POLICY, PRIOR_LINE_POLICY, PRIOR_MATCH_POLICY, PRIOR_PREMATCH_500_POLICY)
     title = "Tennis Price Moves"
     if ordered and all(m.get("alert_policy") == ALERT_POLICY for m in ordered):
+        title = "Tennis moves · final five hours"
+    elif ordered and all(m.get("alert_policy") == PRIOR_TWO_HOUR_POLICY for m in ordered):
         title = "Tennis moves · final two hours"
     elif ordered and all(m.get("alert_policy") in all_day_policies for m in ordered):
         title = "Pre-match tennis moves"
@@ -139,7 +141,7 @@ def roundup_text(moves, observed):
                       f"Earlier: {m['old']:g} at {instant(m['before']):%d %b %H:%M:%S} UTC",
                       f"Detected: {m['new']:g} at {instant(m['after']):%d %b %H:%M:%S} UTC"+(" · both prices shortened" if m["both_shortened"] else ""),
                       f"Price-implied probability {change:+.2f}pp over {elapsed//60}m {elapsed%60:02d}s · {lead} to scheduled start at detection",""])
-        if m.get("alert_policy") in (*all_day_policies, ALERT_POLICY):
+        if m.get("alert_policy") in (*all_day_policies, PRIOR_TWO_HOUR_POLICY, ALERT_POLICY):
             if m.get("detected_in_final_hour"):
                 lines.insert(-1, "Final hour" if m.get("wholly_in_final_hour") else "Detected in final hour · move began earlier")
             limits = [format_limit(m.get(k)) for k in ("alert_reference_limit", "alert_detection_limit")]

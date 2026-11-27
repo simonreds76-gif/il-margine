@@ -10,8 +10,9 @@ PRIOR_ALL_DAY_POLICY = "same-line-over4pp-prematch-limits-shown-v3"
 PRIOR_LINE_POLICY = "same-line-over4pp-prematch-min200usd-v4"
 PRIOR_MATCH_POLICY = "first-match-over4pp-prematch-min200usd-v5"
 PRIOR_PREMATCH_500_POLICY = "first-match-over4pp-prematch-min500usd-v6"
-ALERT_POLICY = "first-match-over4pp-final2h-min500usd-v7"
-ALERT_WINDOW = timedelta(hours=2)
+PRIOR_TWO_HOUR_POLICY = "first-match-over4pp-final2h-min500usd-v7"
+ALERT_POLICY = "first-match-over4pp-final5h-min500usd-v8"
+ALERT_WINDOW = timedelta(hours=5)
 ALERT_MINIMUM_USD = 500
 PAPER_MINIMUM_USD = 200
 FINAL_HOUR = timedelta(hours=1)
@@ -193,10 +194,10 @@ def compare(last, current, state, blocked):
                     previous_time = datetime.fromisoformat(old["last"][0])
                     adjacent = int(now.timestamp()) // 900 - int(previous_time.timestamp()) // 900 == 1
                     if adjacent and window_start <= previous_time < now and now - previous_time <= timedelta(minutes=20):
-                        # On upgrade, only seed from the previous actual observation.
-                        # An all-day high may have been recorded well outside the window.
-                        alert_refs = old.get("final_two_hour_peaks", [old["last"], old["last"]])
-                history[k]["final_two_hour_peaks"] = [
+                        # At cutover the narrower saved peaks are valid inside five hours.
+                        # Otherwise seed from the adjacent scan, never the all-day peak.
+                        alert_refs = old.get("final_five_hour_peaks") or old.get("final_two_hour_peaks") or [old["last"], old["last"]]
+                history[k]["final_five_hour_peaks"] = [
                     alert_refs[i] if alert_refs and alert_refs[i][i+1] > prices[i] else point for i in (0, 1)
                 ]
             if not old:
