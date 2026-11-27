@@ -1,0 +1,67 @@
+name: Private daily referee booking watch
+on:
+  schedule:
+    - cron: '0 9 * * *'
+      timezone: Europe/London
+  workflow_dispatch:
+    inputs:
+      edition:
+        description: Rehearsal date (YYYY-MM-DD), defaults to today in London
+        required: false
+        type: string
+  push:
+    branches: [codex/referee-booking-shortlist-20261127]
+    paths:
+      - '.github/workflows/referee-booking-scan.yml'
+      - 'scripts/referee_booking_scan.py'
+      - 'tests/test_referee_booking_scan.py'
+permissions:
+  contents: read
+concurrency:
+  group: private-referee-booking-watch
+  cancel-in-progress: false
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/referee_booking_scan.py
+            /scripts/statshub_daily_io.py
+            /scripts/statshub_daily_contracts.py
+            /scripts/johnny_cards_calendar.py
+            /tests/test_referee_booking_scan.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet requests cryptography
+      - run: python -m unittest discover -s tests -p test_referee_booking_scan.py
+      - name: Screen upcoming senior fixtures and save the private report
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
+          EVENT: ${{ github.event_name }}
+          EDITION: ${{ inputs.edition }}
+        shell: bash
+        run: |
+          if [ "$EVENT" = schedule ]; then
+            python scripts/referee_booking_scan.py scan
+          else
+            if [ "$EVENT" = push ]; then EDITION=$(TZ=Europe/London date -d tomorrow +%F); fi
+            args=(preview)
+            if [ -n "$EDITION" ]; then args+=(--day "$EDITION"); fi
+            python scripts/referee_booking_scan.py "${args[@]}"
+          fi
+      - name: Deliver one private Telegram digest
+        if: github.event_name == 'schedule'
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}
+        run: python scripts/referee_booking_scan.py deliver
