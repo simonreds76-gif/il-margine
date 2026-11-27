@@ -1,6 +1,10 @@
 {
   "schema_version": 1,
   "provider_limits": {
+    "referee_booking_reads": {
+      "label": "Referee and player booking screen",
+      "source": "At most 320 research reads per daily screen, with a 20 minute screening deadline."
+    },
     "tennis_board": {
       "label": "Tennis pre-match board requests",
       "source": "One board request per claimed quarter-hour; an already claimed slot is not fetched again."
@@ -30,6 +34,15 @@
   },
   "expected_disabled_workflows": ["statshub-daily.yml", "johnny-cards.yml"],
   "github_workflows": [
+    {
+      "file": "referee-booking-scan.yml",
+      "models": ["referee_booking_watch"],
+      "season_gate": "upcoming senior fixtures between consecutive 09:00 London editions",
+      "database_mode": "private object storage for the edition, delivery receipt and OAuth rotation",
+      "db_reads_max_per_run": 0,
+      "db_writes_max_per_run": 0,
+      "schedules": [{"cron": "0 9 * * *", "request_caps": {"referee_booking_reads": 320}}]
+    },
     {
       "file": "pinnradar-tennis.yml",
       "models": ["drop_shot_desk"],
