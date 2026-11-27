@@ -55,13 +55,13 @@ class GamesDesk(unittest.TestCase):
         alerts = desk_games.alert_moves(b)
         self.assertEqual(len(alerts),1)
         self.assertFalse(any(m["detected_in_final_hour"] for m in alerts))
-        self.assertIn("final two hours",roundup_text(alerts,b["observed"]))
+        self.assertIn("final five hours",roundup_text(alerts,b["observed"]))
         for minute, price in [(30,2.2),(45,2.0),(60,1.8)]:
             state,b = self.scan(state,minute,price,start=start)
             self.assertFalse(desk_games.alert_moves(b))
 
     def test_early_move_flat_entry_then_opposite_side_qualifies_once(self):
-        start = self.t + timedelta(minutes=150)
+        start = self.t + timedelta(minutes=330)
         for tour in ("ATP", "Challenger", "WTA", "WTA 125"):
             with self.subTest(tour=tour):
                 state, _ = self.scan({}, 0, 2.5, away_price=1.8, start=start, tour=tour)
@@ -80,30 +80,45 @@ class GamesDesk(unittest.TestCase):
                 self.assertFalse(again["alert_ids"])
 
     def test_delivery_rejects_cross_boundary_old_policy_and_post_start(self):
-        start = self.t + timedelta(hours=2)
+        start = self.t + timedelta(hours=5)
         state, _ = self.scan({}, 0, 2.5, start=start)
         _, batch = self.scan(state, 15, 2.1, start=start)
         selected, = desk_games.alert_moves(batch)
         self.assertEqual(selected["before"], self.t.isoformat())
         self.assertFalse(desk_games.alert_moves(dict(batch, policy=desk_games.PRIOR_PREMATCH_500_POLICY)))
+        self.assertFalse(desk_games.alert_moves(dict(batch, policy=desk_games.PRIOR_TWO_HOUR_POLICY)))
         for before, after in ((self.t - timedelta(seconds=1), self.t + timedelta(minutes=15)), (self.t, start)):
             edited = dict(selected, before=before.isoformat(), after=after.isoformat())
             self.assertFalse(desk_games.alert_moves(dict(batch, moves=[edited], observed=after.isoformat())))
 
     def test_first_scan_inside_window_cannot_inherit_an_early_peak(self):
-        start = self.t + timedelta(minutes=134)
+        start = self.t + timedelta(minutes=314)
         state, _ = self.scan({}, 0, 3.0, start=start)
         state, cross = self.scan(state, 15, 2.1, start=start)
         self.assertTrue(cross["moves"])
         self.assertFalse(cross["alert_ids"])
         for window in state["desk_windows"].values():
-            window.pop("final_two_hour_peaks")
+            window.pop("final_five_hour_peaks")
             window["prematch_peaks"] = window["peaks"]
         state, small = self.scan(state, 30, 2.05, start=start)
         self.assertFalse(small["alert_ids"])
         _, later = self.scan(state, 45, 1.9, start=start)
         selected, = desk_games.alert_moves(later)
         self.assertEqual((selected["old"], selected["before"]), (2.1, cross["observed"]))
+
+    def test_cutover_keeps_adjacent_two_hour_reference_and_original_roundup_wording(self):
+        start = self.t + timedelta(minutes=110)
+        state, _ = self.scan({}, 0, 2.5, start=start)
+        state, flat = self.scan(state, 15, 2.4, start=start)
+        self.assertFalse(flat["alert_ids"])
+        for window in state["desk_windows"].values():
+            window["final_two_hour_peaks"] = window.pop("final_five_hour_peaks")
+        _, batch = self.scan(state, 30, 2.25, start=start)
+        selected, = desk_games.alert_moves(batch)
+        self.assertEqual((selected["old"], selected["before"]), (2.5, self.t.isoformat()))
+        original = dict(selected, alert_policy=desk_games.PRIOR_TWO_HOUR_POLICY)
+        self.assertIn("final two hours", roundup_text([original], batch["observed"]))
+        self.assertIn("Market limit:", roundup_text([original], batch["observed"]))
 
     def test_strict_threshold_and_final_hour_context(self):
         self.assertFalse(desk_games.alert_crossing(6.25,5))
