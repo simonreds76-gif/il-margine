@@ -3,7 +3,7 @@
   "provider_limits": {
     "referee_booking_reads": {
       "label": "Referee and player booking screen",
-      "source": "At most 320 research reads per daily screen, with a 20 minute screening deadline."
+      "source": "At most 220 research reads per daily screen, with a 20 minute screening deadline."
     },
     "tennis_board": {
       "label": "Tennis pre-match board requests",
@@ -41,7 +41,7 @@
       "database_mode": "private object storage for the edition, delivery receipt and OAuth rotation",
       "db_reads_max_per_run": 0,
       "db_writes_max_per_run": 0,
-      "schedules": [{"cron": "0 9 * * *", "request_caps": {"referee_booking_reads": 320}}]
+      "schedules": [{"cron": "0 9 * * *", "request_caps": {"referee_booking_reads": 220}}]
     },
     {
       "file": "pinnradar-tennis.yml",
