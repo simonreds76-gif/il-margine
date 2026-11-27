@@ -9,6 +9,7 @@ from datetime import date, datetime, timezone
 import json
 import os
 from pathlib import Path
+import subprocess
 import urllib.request
 
 
@@ -102,6 +103,7 @@ def goalkeeper_contract(row: dict[str, str]) -> tuple:
 
 def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
                           tracked_rows: list[dict[str, str]] | None = None, *, now=None, sources=None) -> list[dict[str, object]]:
+    from goalkeeper_delivery import pick_keys, three_books
     tracked: dict[tuple, list[dict[str, str]]] = {}
     for original in tracked_rows or []:
         if original.get("status") == "pending" and not original.get("duplicate_of") and not original.get("quarantine_reason"):
@@ -126,6 +128,7 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
         originals = tracked.get(goalkeeper_contract(row), [])
         original = originals[0] if len(originals) == 1 else None
         comparison = ''
+        pair = []
         if now is not None:
             from goalkeeper_alert_prices import paired_prices, format_prices
             from goalkeeper_price_selection import alert_price_check
@@ -151,6 +154,8 @@ def goalkeeper_candidates(rows: list[dict[str, str]], target_day: str,
                 "captured_at": row.get("captured_at", ""),
                 "original": dict(original) if original else None,
                 "comparison": comparison,
+                "keeper_keys": sorted(pick_keys({**row, 'display_prices':pair})),
+                "three_book_prices": pair if three_books(pair) else [],
             }
         )
     return sorted(candidates, key=lambda row: (str(row["kickoff"]), str(row["match"]), -float(row["edge"])))
@@ -173,10 +178,9 @@ def build_candidates(target_day: str) -> dict[str, list[dict[str, object]]]:
 def load_state(path: Path) -> dict:
     if not path.exists():
         return {"schema_version": 1, "sent": {}, "summary_dates": []}
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {"schema_version": 1, "sent": {}, "summary_dates": []}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload.get('sent'), dict):
+        raise ValueError('Football digest delivery ledger has an unexpected format')
     return {
         "schema_version": 1,
         "sent": payload.get("sent", {}) if isinstance(payload.get("sent"), dict) else {},
@@ -191,9 +195,20 @@ def write_state(path: Path, state: dict) -> None:
     temporary.replace(path)
 
 
-def unseen_candidates(groups: dict[str, list[dict[str, object]]], state: dict) -> dict[str, list[dict[str, object]]]:
+def unseen_candidates(groups: dict[str, list[dict[str, object]]], state: dict, dedicated=None) -> dict[str, list[dict[str, object]]]:
+    from goalkeeper_delivery import dedicated_keys, digest_keys
     sent = state.get("sent", {})
-    return {label: [row for row in rows if str(row["id"]) not in sent] for label, rows in groups.items()}
+    keeper_seen = dedicated_keys(dedicated or {}) | digest_keys(sent)
+    result = {}
+    for label, rows in groups.items():
+        result[label] = []
+        for row in rows:
+            keys = set(row.get('keeper_keys', []))
+            if row['id'] in sent or keeper_seen & keys:
+                continue
+            keeper_seen.update(keys)
+            result[label].append(row)
+    return result
 
 
 def candidate_block(row: dict[str, object]) -> str:
@@ -259,7 +274,7 @@ def render_messages(groups: dict[str, list[dict[str, object]]], target_day: str,
     return messages
 
 
-def send_telegram(message: str, token: str, chat_id: str) -> None:
+def send_telegram(message: str, token: str, chat_id: str) -> dict:
     payload = json.dumps(
         {"chat_id": chat_id, "text": message, "disable_web_page_preview": True}
     ).encode("utf-8")
@@ -270,10 +285,24 @@ def send_telegram(message: str, token: str, chat_id: str) -> None:
         method="POST",
     )
     with urllib.request.urlopen(request, timeout=20) as response:
-        response.read()
+        payload = json.load(response)
+        if payload.get('ok') is not True or not (payload.get('result') or {}).get('message_id'):
+            raise ValueError('Telegram did not confirm the digest')
+        return payload['result']
+
+
+def publish_keeper_claim(path):
+    """A replacement cloud runner must see the digest claim before Telegram does."""
+    if os.environ.get('GITHUB_ACTIONS') != 'true' or path.resolve() != DEFAULT_STATE.resolve():
+        return
+    subprocess.run(['git','-c','user.name=github-actions[bot]','-c','user.email=github-actions[bot]@users.noreply.github.com',
+                    'commit','--only','-m','chore: reserve keeper digest delivery','--',str(path.relative_to(ROOT))],
+                   cwd=ROOT,check=True)
+    subprocess.run(['bash','scripts/ci-safe-push.sh','golden-with-speed-insights'],cwd=ROOT,check=True)
 
 
 def main() -> int:
+    from goalkeeper_delivery import read_receipts, telegram_text_matches
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--state", type=Path, default=DEFAULT_STATE)
@@ -281,7 +310,9 @@ def main() -> int:
     args = parser.parse_args()
 
     state = load_state(args.state)
-    groups = unseen_candidates(build_candidates(args.date), state)
+    dedicated = read_receipts(args.state.parent.parent / 'goalkeeper-saves' / 'gk-saves-telegram-state.json','signals')
+    groups = unseen_candidates(build_candidates(args.date), state, dedicated)
+    by_id = {row['id']:row for rows in groups.values() for row in rows}
     first_summary_today = args.date not in state["summary_dates"]
     messages = render_messages(groups, args.date, include_empty=first_summary_today)
     if not messages:
@@ -305,9 +336,13 @@ def main() -> int:
         # to send the same bet again. The existing workflow persists this state.
         for identity in identities:
             state['sent'][identity]={'claimed_at':now,'fixture_date':args.date,'status':'sending'}
+            if by_id[identity].get('keeper_keys'):
+                state['sent'][identity]['keeper_keys'] = by_id[identity]['keeper_keys']
         write_state(args.state,state)
+        if any(by_id[identity].get('keeper_keys') for identity in identities):
+            publish_keeper_claim(args.state)
         try:
-            send_telegram(message, token, chat_id)
+            delivered = send_telegram(message, token, chat_id)
         except Exception as exc:
             for identity in identities:
                 state['sent'][identity].update(status='uncertain',error=type(exc).__name__)
@@ -315,7 +350,12 @@ def main() -> int:
             print(f'::warning::Football digest delivery uncertain; retained claims for manual review ({type(exc).__name__}).')
             return 0
         for identity in identities:
-            state["sent"][identity] = {"sent_at": now, "fixture_date": args.date,"status":"sent"}
+            receipt = state["sent"][identity]
+            receipt.update(sent_at=now, status='sent')
+            row = by_id[identity]
+            if row.get('three_book_prices'):
+                receipt.update(three_book_text_verified=telegram_text_matches(delivered,message),
+                               display_prices=row['three_book_prices'], fair_odds=row['fair'])
         write_state(args.state, state)
     if args.date not in state["summary_dates"]:
         state["summary_dates"].append(args.date)

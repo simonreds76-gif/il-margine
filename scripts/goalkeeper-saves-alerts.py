@@ -17,6 +17,7 @@ import requests
 from goalkeeper_price_selection import alert_price_check, contract_key, number
 from goalkeeper_quote_integrity import current_quote_issue
 from goalkeeper_alert_prices import format_prices, load_sources, paired_prices
+from goalkeeper_delivery import digest_keys, pick_keys, read_receipts, three_books, telegram_text_matches
 
 ROOT = Path(__file__).resolve().parents[1]
 FOLDER = ROOT / 'data/goalkeeper-saves'
@@ -98,7 +99,8 @@ def prior_claim(row, entries, own_key=None):
         return False
     own = entries.get(own_key, {})
     for signal_id, item in entries.items():
-        if signal_id == own_key or recommendation_key(item.get('signal', {})) != key:
+        previous = item.get('signal', {})
+        if signal_id == own_key or (recommendation_key(previous) != key and not pick_keys(row) & pick_keys(previous)):
             continue
         if item.get('status') in ('sent', 'delivery_unconfirmed'):
             return True
@@ -119,7 +121,7 @@ def checked_alert_prices(row, offers, now, sources):
     return None, comparison, display
 
 
-def claim(rows, state, token, now, offers=None, sources=None):
+def claim(rows, state, token, now, offers=None, sources=None, digest_sent=frozenset()):
     entries = state.setdefault('signals', {})
     added = 0
     rejected = {}
@@ -127,7 +129,7 @@ def claim(rows, state, token, now, offers=None, sources=None):
         key = row.get('signal_id','')
         if (key in entries and not entries[key].get('retryable_before_http')) or not eligible(row, now) or added >= 10:
             continue
-        reason = 'fixture_already_notified_or_claimed' if prior_claim(row, entries) else None
+        reason = 'fixture_already_notified_or_claimed' if prior_claim(row, entries) or pick_keys(row) & digest_sent else None
         comparison = []
         display = []
         if not reason and offers is not None:
@@ -138,6 +140,9 @@ def claim(rows, state, token, now, offers=None, sources=None):
         signal = dict(row)
         if display:
             signal['display_prices'] = display
+            if prior_claim(signal, entries) or pick_keys(signal) & digest_sent:
+                rejected['fixture_already_notified_or_claimed'] = rejected.get('fixture_already_notified_or_claimed', 0) + 1
+                continue
         if comparison:
             signal.update(price_comparison=comparison, price_checked_at=now.isoformat())
         entries[key] = {'status':'claimed','run_token':token,'claimed_at':now.isoformat(), 'signal':signal}
@@ -236,13 +241,14 @@ def main():
     with a.candidates.open(encoding='utf-8-sig',newline='') if a.candidates.exists() else io.StringIO('') as f:
         offers=list(csv.DictReader(f))
     sources = load_sources(a.candidates.parent)
+    digest_sent = digest_keys(read_receipts(a.state.parent.parent / 'football-form' / 'football-daily-signal-digest-state.json','sent'))
     def save():
         a.state.parent.mkdir(parents=True,exist_ok=True);tmp=a.state.with_suffix('.tmp');tmp.write_text(json.dumps(state,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');tmp.replace(a.state)
     if a.prepare:
         with a.ledger.open(encoding='utf-8-sig',newline='') as f: rows=list(csv.DictReader(f))
         now=datetime.now(timezone.utc)
-        count=claim(rows,state,token,now,offers,sources)
-        watch_count=claim(keeper_watch_rows(a.report,now),state,token,now,offers,sources)
+        count=claim(rows,state,token,now,offers,sources,digest_sent)
+        watch_count=claim(keeper_watch_rows(a.report,now),state,token,now,offers,sources,digest_sent)
         save();print(f'GK alert claims prepared: current {count}; Keeper Watch paper {watch_count}');return
     try:
         coverage = json.loads((a.candidates.parent/'gk-saves-capture-status.json').read_text(encoding='utf-8'))
@@ -253,12 +259,14 @@ def main():
         if item.get('status')!='claimed' or item.get('run_token')!=token: continue
         if not eligible(item['signal'],datetime.now(timezone.utc)):
             item['status']='expired_before_send';save();continue
-        reason = 'fixture_already_notified_or_claimed' if prior_claim(item['signal'], state['signals'], key) else None
+        reason = 'fixture_already_notified_or_claimed' if prior_claim(item['signal'], state['signals'], key) or pick_keys(item['signal']) & digest_sent else None
         if not reason:
             now = datetime.now(timezone.utc)
             reason, comparison, display = checked_alert_prices(item['signal'], offers, now, sources)
             if not reason:
                 item['signal'].update(display_prices=display, price_comparison=comparison, price_checked_at=now.isoformat())
+                if prior_claim(item['signal'], state['signals'], key) or pick_keys(item['signal']) & digest_sent:
+                    reason = 'fixture_already_notified_or_claimed'
         if reason in ('awaiting_fresh_bet365_grosvenor_pair','current_quote_unavailable'):
             # Nothing was sent. A later capture may safely retry the locked selection.
             state['last_deferred_before_send'] = dict(signal_id=key, reason=reason, checked_at=now.isoformat())
@@ -272,7 +280,8 @@ def main():
         # Persist uncertainty before HTTP. A replay cannot assume Telegram rejected it.
         item['status']='delivery_unconfirmed';save()
         try:
-            r=requests.post(f'https://api.telegram.org/bot{bot}/sendMessage',json={'chat_id':chat,'text':message(item['signal'],coverage),'parse_mode':'HTML','disable_web_page_preview':True},timeout=20)
+            body = message(item['signal'],coverage)
+            r=requests.post(f'https://api.telegram.org/bot{bot}/sendMessage',json={'chat_id':chat,'text':body,'parse_mode':'HTML','disable_web_page_preview':True},timeout=20)
             payload=r.json()
             # A structured rejection confirms that this attempt was not accepted.
             # Never persist the response text or exception URL: either can expose credentials.
@@ -281,6 +290,8 @@ def main():
                 failed+=1;save();print(f'GK alert rejected: HTTP {r.status_code}; review required');continue
             if not r.ok or payload.get('ok') is not True: raise ValueError('Invalid Telegram response')
             item.update(status='sent',message_id=payload['result']['message_id'],sent_at=datetime.now(timezone.utc).isoformat());sent+=1
+            if three_books(item['signal'].get('display_prices', [])):
+                item['three_book_text_verified'] = telegram_text_matches(payload['result'], body, rich=True)
         except Exception as exc:
             kind = ('timeout' if isinstance(exc, requests.exceptions.Timeout) else
                     'connection_error' if isinstance(exc, requests.exceptions.ConnectionError) else
