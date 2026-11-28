@@ -1,10 +1,14 @@
 name: Private daily referee booking watch
 on:
   schedule:
-    - cron: '0 9 * * *'
+    - cron: '0,25 9 * * *'
       timezone: Europe/London
   workflow_dispatch:
     inputs:
+      deliver_today:
+        description: Recover today's private digest using the existing delivery receipt
+        type: boolean
+        default: false
       edition:
         description: Rehearsal date (YYYY-MM-DD), defaults to today in London
         required: false
@@ -45,11 +49,13 @@ jobs:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           STATSHUB_DAILY_AUTH: ${{ secrets.STATSHUB_DAILY_AUTH }}
+          LIVE_EDITION: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.deliver_today) }}
           EVENT: ${{ github.event_name }}
           EDITION: ${{ inputs.edition }}
         shell: bash
         run: |
-          if [ "$EVENT" = schedule ]; then
+          if [ "$LIVE_EDITION" = true ]; then
+            if [ -n "$EDITION" ]; then echo "Recovery uses the current UK date"; exit 1; fi
             python scripts/referee_booking_scan.py scan
           else
             if [ "$EVENT" = push ]; then EDITION=$(TZ=Europe/London date -d tomorrow +%F); fi
@@ -58,7 +64,7 @@ jobs:
             python scripts/referee_booking_scan.py "${args[@]}"
           fi
       - name: Deliver one private Telegram digest
-        if: github.event_name == 'schedule'
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.deliver_today)
         env:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
