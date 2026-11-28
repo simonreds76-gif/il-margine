@@ -1,4 +1,5 @@
 import "server-only";
+import { tennisTeamFlag } from "./tennis-team-flags";
 import { createHash } from "node:crypto";
 import { resolveTennisPortrait } from "./tennis-portrait.mjs";
 import penaltyPortraits from "../../data/goalscorer/penalty-player-portraits.json";
@@ -61,6 +62,13 @@ function tennisPortrait(name: string): TipPortrait {
 export function getTipArtwork(pick: PickIdentity): TipPortrait[] {
   const sides = participants(pick.event);
   if (pick.market === "tennis") {
+    if (sides.length === 2) {
+      const [home, away] = sides.map(tennisTeamFlag);
+      if (home && away) return [
+        { name: sides[0], src: home, kind: "country" },
+        { name: sides[1], src: away, kind: "country" },
+      ];
+    }
     const useCurrentAtpShorthand = pick.category === "atp" && (!pick.match_date || pick.match_date >= "2024-01-01");
     return sides.map((name) => tennisPortrait(useCurrentAtpShorthand ? currentAtpPortraitAliases[key(name)] ?? name : name));
   }

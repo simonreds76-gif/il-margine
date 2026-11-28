@@ -432,3 +432,17 @@ test('missing opponent national roster uses exact active senior national affilia
   }
 });
 
+
+test('national tennis ties show both local flags in fixture order, including an ATP-labelled tip', () => {
+  const artwork = harness().load(path.join(root, 'src/lib/tip-artwork.ts')).getTipArtwork;
+  const pick = { id: 1387, market: 'tennis', category: 'atp', event: 'Great Britain vs Spain', player: 'Great Britain' };
+  const flags = artwork(pick);
+  assert.deepEqual(flags.map(p => [p.name, p.src, p.kind]), [
+    ['Great Britain', '/flags/gb.png', 'country'], ['Spain', '/flags/es.png', 'country'],
+  ]);
+  for (const flag of flags) assert.ok(fs.existsSync(path.join(root, 'public', flag.src)));
+  assert.deepEqual(artwork({...pick, event: 'ESP v GBR'}).map(p => p.src), ['/flags/es.png', '/flags/gb.png']);
+  for (const event of ['Carlos Alcaraz vs Jack Draper', 'Spain vs Jack Draper', 'Unknown vs Spain']) {
+    assert.ok(artwork({...pick, event}).every(p => p.kind === 'player'));
+  }
+});
