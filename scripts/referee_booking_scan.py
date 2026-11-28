@@ -6,7 +6,7 @@ from datetime import date, datetime, time, timedelta, timezone
 from math import isfinite, sqrt
 import os
 import re
-from time import monotonic
+from time import monotonic, sleep
 from zoneinfo import ZoneInfo
 
 import requests
@@ -297,8 +297,13 @@ def saved_only(cache):
     return Saved()
 
 
-def screen(reader, day, preview=False, previous=None):
+def screen(reader, day, preview=False, previous=None, checkpoint=None, resume=None):
     now = datetime.now(UTC)
+    if resume:
+        reader.calls = resume["reads"]
+        reader.by_tool.update(resume["readsByTool"])
+        return finish_screen(reader,day,preview,resume["fixtures"],resume["calendarGaps"],{},
+                             resume["started"],checkpoint,resume["stage"])
     start, end = edition_window(day)
     fixtures, gaps = discover(reader, start, end)
     if preview:
@@ -372,6 +377,20 @@ def screen(reader, day, preview=False, previous=None):
         except (Missing, ValueError, KeyError, TypeError) as exc:
             f["status"] = str(exc) if isinstance(exc,Missing) else "referee history format unavailable"
 
+    return finish_screen(reader,day,preview,fixtures,gaps,contexts,now.isoformat(),checkpoint)
+
+
+def finish_screen(reader,day,preview,fixtures,gaps,contexts,started,checkpoint,stage=None):
+    def snapshot(stage):
+        report=dict(day=str(day),preview=preview,screenVersion=SCREEN_VERSION,started=started,
+                    fixtures=fixtures,calendarGaps=gaps,reads=reader.calls,readsByTool=dict(reader.by_tool),stage=stage)
+        if checkpoint:
+            checkpoint(stage,report)
+        return report
+
+    if stage is None:
+        snapshot("referees")
+    qualified=[f for f in fixtures if f.get("status")=="qualified referee" and stage!="players"]
     for f in sorted(qualified,key=lambda f:(not f["core"],f.get("calendarLineup")=="none",-(f.get("indexYellows") or 0),f["ko"])):
         try:
             if datetime.fromisoformat(f["ko"]) <= datetime.now(UTC):
@@ -387,10 +406,12 @@ def screen(reader, day, preview=False, previous=None):
             f.update(players=players,eligibleStarters=count,status="reviewed")
         except (Missing, KeyError, TypeError, ValueError) as exc:
             f["status"] = str(exc) if isinstance(exc,Missing) else "player evidence format unavailable"
-    check_cards(reader, fixtures)
-    return dict(day=str(day), preview=preview, screenVersion=SCREEN_VERSION, started=now.isoformat(),
-                completed=datetime.now(UTC).isoformat(), fixtures=fixtures, calendarGaps=gaps,
-                reads=reader.calls, readsByTool=dict(reader.by_tool))
+    if stage!="players":
+        snapshot("players")
+    check_cards(reader,fixtures)
+    return dict(day=str(day),preview=preview,screenVersion=SCREEN_VERSION,started=started,
+                completed=datetime.now(UTC).isoformat(),fixtures=fixtures,calendarGaps=gaps,
+                reads=reader.calls,readsByTool=dict(reader.by_tool))
 
 
 def booking_odds(reader, batch):
@@ -595,7 +616,7 @@ def deliver(store, report, now):
         edit_key=f"{PREFIX}/{report['day']}/booking-amendment.json"
         receipt=store.get(edit_key) or {}
         comparable = any(p.get("cards") and p.get("cardPrice") for f in report["fixtures"] for p in f.get("players",[]))
-        if not comparable or before==after or receipt.get("state")=="edited" and receipt.get("selection")==after:
+        if not comparable or before==after or receipt.get("state")=="edited":
             return
         caption,body,_=digest(report,now)
         endpoint,chat=telegram_private()
@@ -624,6 +645,26 @@ def deliver(store, report, now):
     store.put(key, {"state":"sent","at":now.isoformat(),"message_id":msg["result"]["message_id"]})
 
 
+def save_report(store,key,value,replace=True):
+    for attempt in range(3):
+        try:
+            return store.put(key,value,replace=replace)
+        except (requests.Timeout,requests.ConnectionError,RemoteError) as error:
+            if isinstance(error,RemoteError) and error.status_code not in (408,429,500,502,503,504):
+                raise
+            try:
+                actual=store.get(key)
+            except (requests.Timeout,requests.ConnectionError):
+                actual=None
+            if actual==value:
+                return True
+            if actual is not None and not replace:
+                return False
+            if attempt==2:
+                raise
+            sleep(1+2*attempt)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", choices=["scan","deliver","preview"])
@@ -636,9 +677,12 @@ def main():
         parser.error("Only a rehearsal accepts a different date")
     folder = f"{PREFIX}/rehearsals/{os.environ.get('GITHUB_RUN_ID','local')}-{os.environ.get('GITHUB_RUN_ATTEMPT','1')}" if preview else PREFIX
     key = f"{folder}/{day}/report.json"
+    stage_key=f"{folder}/{day}/booking-v{SCREEN_VERSION}"
     store = Store()
     report = store.get(key)
+    final=store.get(stage_key+"-final.json")
     if args.mode == "deliver":
+        report=final or report
         if report is None:
             raise RuntimeError("Edition missing from private storage")
         deliver(store, report, datetime.now(UTC))
@@ -647,9 +691,18 @@ def main():
     upgrade = bool(report and not preview and report.get("screenVersion",1)<SCREEN_VERSION)
     if report is None or upgrade:
         if upgrade:
-            store.put(f"{folder}/{day}/original.json",report,replace=False)
-        report = screen(Reads(Provider(store)), day, preview,previous=report)
-        if not store.put(key, report, replace=upgrade):
+            save_report(store,f"{folder}/{day}/original.json",report,replace=False)
+        if final is None:
+            progress=store.get(stage_key+"-players.json") or store.get(stage_key+"-referees.json")
+            def checkpoint(name,data):
+                save_report(store,stage_key+"-"+name+".json",data,replace=False)
+            final=screen(Reads(Provider(store)),day,preview,previous=report,checkpoint=checkpoint,resume=progress)
+            if not save_report(store,stage_key+"-final.json",final,replace=False):
+                final=store.get(stage_key+"-final.json")
+                if not final:
+                    raise RuntimeError("Private revision could not be verified")
+        report=final
+        if not save_report(store,key,report,replace=upgrade):
             report = store.get(key)
     _, _, count = digest(report, datetime.now(UTC))
     statuses = Counter(f["status"] for f in report["fixtures"])

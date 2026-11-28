@@ -179,6 +179,13 @@ class BookingTests(unittest.TestCase):
         self.assertEqual(values[("abc","123")]["odds"],4)
         self.assertFalse(reader.read.call_args.kwargs["includeStale"])
 
+    def test_uncertain_save_uses_readback_before_retry(self):
+        store=Mock()
+        store.put.side_effect=watch.requests.ReadTimeout()
+        store.get.return_value={"saved":"here"}
+        self.assertTrue(watch.save_report(store,"test",{"saved":"here"}))
+        self.assertEqual(store.put.call_count,1)
+
     def test_recovery_edits_original_only_when_shortlist_changes(self):
         old=self.report()
         store=Memory()
