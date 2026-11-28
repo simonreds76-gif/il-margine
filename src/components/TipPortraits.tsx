@@ -10,7 +10,7 @@ function PickPortrait({ portrait, pixels }: { portrait: TipPortrait; pixels: 32 
   const smallFallback = smallTipPhoto(portrait.fallbackSrc, pixels);
   const src = [small, portrait.src, smallFallback, portrait.fallbackSrc].find((url) => url && !failed.includes(url));
   const isClub = portrait.kind === "club" || (src != null && (src === portrait.fallbackSrc || src === smallFallback));
-  return <span className={`${styles.portrait} ${isClub ? styles.crest : ""}`} title={portrait.name} aria-hidden="true">
+  return <span className={`${styles.portrait} ${portrait.kind === "country" ? styles.flag : isClub ? styles.crest : ""}`} title={portrait.name} aria-hidden="true">
     {src ? (
       // Cached copies retain the existing crop and dimensions. On a transform
       // failure retry the original player photo before falling back to the club.
