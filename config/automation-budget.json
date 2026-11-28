@@ -41,7 +41,7 @@
       "database_mode": "private object storage for the edition, delivery receipt and OAuth rotation",
       "db_reads_max_per_run": 0,
       "db_writes_max_per_run": 0,
-      "schedules": [{"cron": "0 9 * * *", "request_caps": {"referee_booking_reads": 220}}]
+      "schedules": [{"cron": "0,25 9 * * *", "request_caps": {"referee_booking_reads": 220}}]
     },
     {
       "file": "pinnradar-tennis.yml",

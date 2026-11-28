@@ -242,7 +242,10 @@ PENALTY_PLAYER_IDENTITIES = {
 # Club-scoped because the same display name can identify different players.
 # /api/data/playerData?id=1021382 verified Chelsea (8455), DOB 2001-09-26
 # on 2026-11-02. Never match this identity to another club's Joao Pedro.
-PENALTY_TEAM_PLAYER_IDENTITIES = {("8455", "joao pedro"): "1021382"}
+PENALTY_TEAM_PLAYER_IDENTITIES = {
+    ("8455", "joao pedro"): "1021382",
+    ("8696", "andres martin"): "899195",
+}
 
 
 def _explicit_player_alias(left, right):
