@@ -414,6 +414,49 @@ def finish_screen(reader,day,preview,fixtures,gaps,contexts,started,checkpoint,s
                 reads=reader.calls,readsByTool=dict(reader.by_tool))
 
 
+def use_remaining(reader,report):
+    """Reclaim unused player lookups when lineups or foul records were unavailable."""
+    reader.calls=report["reads"]
+    reader.by_tool.update(report["readsByTool"])
+    fixtures=report["fixtures"]
+    now=datetime.now(UTC)
+    for f in fixtures:
+        if datetime.fromisoformat(f["ko"])<=now or f["status"]!="reviewed":
+            continue
+        for p in f["players"]:
+            if not p.get("cards") and "unavailable" in p.get("historyStatus",""):
+                try:
+                    p["cards"]=card_record(reader,p,now)
+                    p.pop("historyStatus",None)
+                    p["cardAssessment"]=assess_card(p["cards"],p.get("cardPrice"))
+                except (Missing,KeyError,TypeError,ValueError):
+                    pass
+
+    pending=[f for f in fixtures if f.get("status") in ("referee dates need verification","getReferee unavailable (HTTP 502)")
+             and f.get("appointment") and datetime.fromisoformat(f["ko"])>now]
+    cache=RefereeReads(reader)
+    while pending and reader.max_reads-reader.calls>=8 and not reader.stopped:
+        ready=[]
+        while pending and reader.max_reads-reader.calls>=8*(len(ready)+1) and not reader.stopped:
+            f=pending.pop(0)
+            try:
+                sample=f["refSample"]=referee_sample(cache,f["appointment"],date.fromisoformat(report["day"]))
+                if not sample or sample["games"]<MIN_REF_GAMES:
+                    f["status"]="insufficient dated referee history"
+                elif sample["mean"]<MIN_YELLOWS:
+                    f["status"]="below referee threshold"
+                else:
+                    f["status"]="qualified referee"
+                    ready.append(f)
+            except (Missing,ValueError,KeyError,TypeError) as exc:
+                f["status"]=str(exc) if isinstance(exc,Missing) else "referee history format unavailable"
+        if ready:
+            # Only newly qualified fixtures enter the player and card checks.
+            finish_screen(reader,date.fromisoformat(report["day"]),report["preview"],ready,[],{},report["started"],None,"referees")
+    report.update(remainingChecked=True,reads=reader.calls,readsByTool=dict(reader.by_tool),completed=datetime.now(UTC).isoformat())
+    return report
+
+
 def booking_odds(reader, batch):
     prices = {}
     page = 1
@@ -616,7 +659,9 @@ def deliver(store, report, now):
         edit_key=f"{PREFIX}/{report['day']}/booking-amendment.json"
         receipt=store.get(edit_key) or {}
         comparable = any(p.get("cards") and p.get("cardPrice") for f in report["fixtures"] for p in f.get("players",[]))
-        if not comparable or before==after or receipt.get("state")=="edited":
+        displayed=receipt.get("selection",before)
+        if (not comparable or displayed==after or
+                receipt.get("reportCompleted")==report.get("completed") and receipt.get("state")=="edited"):
             return
         caption,body,_=digest(report,now)
         endpoint,chat=telegram_private()
@@ -628,7 +673,8 @@ def deliver(store, report, now):
         result=msg.get("result") or {}
         if not msg.get("ok") or result.get("message_id")!=mid or str((result.get("chat") or {}).get("id"))!=chat:
             raise RuntimeError("Original digest edit not acknowledged")
-        store.put(edit_key,{"state":"edited","selection":after,"at":now.isoformat(),"message_id":mid})
+        store.put(edit_key,{"state":"edited","selection":after,"at":now.isoformat(),"message_id":mid,
+                            "reportCompleted":report.get("completed")})
         return
     caption, body, _ = digest(report, now)
     endpoint, chat = telegram_private()
@@ -681,18 +727,19 @@ def main():
     store = Store()
     report = store.get(key)
     final=store.get(stage_key+"-final.json")
+    completed=store.get(stage_key+"-complete.json")
     if args.mode == "deliver":
-        report=final or report
+        report=completed or final or report
         if report is None:
             raise RuntimeError("Edition missing from private storage")
         deliver(store, report, datetime.now(UTC))
         print("Private delivery acknowledged")
         return
     upgrade = bool(report and not preview and report.get("screenVersion",1)<SCREEN_VERSION)
-    if report is None or upgrade:
+    if report is None or upgrade or not report.get("remainingChecked"):
         if upgrade:
             save_report(store,f"{folder}/{day}/original.json",report,replace=False)
-        if final is None:
+        if final is None and completed is None:
             progress=store.get(stage_key+"-players.json") or store.get(stage_key+"-referees.json")
             def checkpoint(name,data):
                 save_report(store,stage_key+"-"+name+".json",data,replace=False)
@@ -701,8 +748,15 @@ def main():
                 final=store.get(stage_key+"-final.json")
                 if not final:
                     raise RuntimeError("Private revision could not be verified")
-        report=final
-        if not save_report(store,key,report,replace=upgrade):
+        if completed is None:
+            completed=use_remaining(Reads(Provider(store)),final)
+            if not save_report(store,stage_key+"-complete.json",completed,replace=False):
+                completed=store.get(stage_key+"-complete.json")
+                if not completed:
+                    raise RuntimeError("Completed report could not be verified")
+        replace=report is not None
+        report=completed
+        if not save_report(store,key,report,replace=replace):
             report = store.get(key)
     _, _, count = digest(report, datetime.now(UTC))
     statuses = Counter(f["status"] for f in report["fixtures"])

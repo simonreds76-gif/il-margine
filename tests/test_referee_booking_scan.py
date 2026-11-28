@@ -186,6 +186,19 @@ class BookingTests(unittest.TestCase):
         self.assertTrue(watch.save_report(store,"test",{"saved":"here"}))
         self.assertEqual(store.put.call_count,1)
 
+    def test_reclaim_only_unspent_reads_on_unresolved_matches(self):
+        report=self.report()
+        report.update(reads=210,readsByTool={"getReferee":210},started=self.now.isoformat())
+        report["fixtures"].append(dict(self.game,id="new",status="referee dates need verification",
+                                       appointment={"id":"ref","name":"Ref"}))
+        api=Mock()
+        api.read.return_value={"profile":{"data":{"id":"ref"}},"record":{"recentGames":{
+            "context":f"{self.now.date()} to {self.now.date()}","totals":{"games":20,"yellowCards":50}}}}
+        result=watch.use_remaining(watch.Reads(api),report)
+        self.assertEqual(result["reads"],211)
+        self.assertEqual(result["fixtures"][1]["status"],"below referee threshold")
+        api.read.assert_called_once()
+
     def test_recovery_edits_original_only_when_shortlist_changes(self):
         old=self.report()
         store=Memory()
