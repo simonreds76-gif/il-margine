@@ -252,14 +252,9 @@
     "5881241": "2026-11-28",
     "5803002": "2026-11-28"
   },
-  "updated_at": "2026-11-28T02:09:28.224886+00:00",
-  "checked_this_run": 13,
-  "errors": [
-    {
-      "match_id": "5868137",
-      "reason": "unresolved_player_timeline"
-    }
-  ],
+  "updated_at": "2026-11-28T02:39:26.257652+00:00",
+  "checked_this_run": 0,
+  "errors": [],
   "fixtures": {
     "5749700": {
       "league": "serie-a",
@@ -12050,7 +12045,7 @@
           "name": "Chelsea"
         },
         "status": {
-          "utcTime": "2026-11-27T20:00:00+00:00",
+          "utcTime": "2026-11-27T20:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "27.11.2026 21:00:44",
             "secondHalfStarted": "27.11.2026 22:03:54"
@@ -12096,7 +12091,7 @@
           "name": "Racing Santander"
         },
         "status": {
-          "utcTime": "2026-11-27T20:00:00+00:00",
+          "utcTime": "2026-11-27T20:00:00.000Z",
           "halfs": {
             "firstHalfStarted": "27.11.2026 21:01:55",
             "secondHalfStarted": "27.11.2026 22:04:00"
@@ -12142,7 +12137,7 @@
           "name": "Bologna"
         },
         "status": {
-          "utcTime": "2026-11-27T19:45:00+00:00",
+          "utcTime": "2026-11-27T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "27.11.2026 20:46:11",
             "secondHalfStarted": "27.11.2026 21:50:46"
@@ -12190,7 +12185,7 @@
           "shortName": "M'gladbach"
         },
         "status": {
-          "utcTime": "2026-11-27T19:30:00+00:00",
+          "utcTime": "2026-11-27T19:30:00.000Z",
           "halfs": {
             "firstHalfStarted": "27.11.2026 20:30:53",
             "secondHalfStarted": "27.11.2026 21:36:20"
@@ -12236,7 +12231,7 @@
           "name": "Paris FC"
         },
         "status": {
-          "utcTime": "2026-11-27T19:45:00+00:00",
+          "utcTime": "2026-11-27T19:45:00.000Z",
           "halfs": {
             "firstHalfStarted": "27.11.2026 20:45:11",
             "secondHalfStarted": "27.11.2026 21:48:06"
@@ -13446,7 +13441,7 @@
     },
     "20261125": {
       "ok": true,
-      "checked_at": "2026-11-26T19:48:03.362672+00:00",
+      "checked_at": "2026-11-28T02:39:26.257652+00:00",
       "expected": 0,
       "match_ids": [],
       "missing_known_ids": []
@@ -13460,7 +13455,7 @@
     },
     "20261127": {
       "ok": true,
-      "checked_at": "2026-11-28T02:09:28.224886+00:00",
+      "checked_at": "2026-11-28T02:39:26.257652+00:00",
       "expected": 5,
       "match_ids": [
         "5749769",
@@ -13473,7 +13468,7 @@
     },
     "20261128": {
       "ok": true,
-      "checked_at": "2026-11-28T02:09:28.224886+00:00",
+      "checked_at": "2026-11-28T02:39:26.257652+00:00",
       "expected": 20,
       "match_ids": [
         "5749763",
