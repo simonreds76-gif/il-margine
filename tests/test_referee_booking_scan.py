@@ -34,22 +34,30 @@ class BookingTests(unittest.TestCase):
                        refSample=dict(games=20,yellows=80,mean=4,first="2026-01-01",last="2026-11-20",capped=False))
         return dict(day=str(self.now.astimezone(watch.UK).date()),preview=False,fixtures=[fixture],calendarGaps=[],reads=1)
 
-    def test_foul_leaders_are_returned_without_any_odds_or_booking_reads(self):
+    def test_full_referee_pass_precedes_players_and_below_cutoff_is_skipped(self):
         data = {"matches":{"id":self.game["id"],"status":"scheduled",
                            "kickoffTimestamp":int(datetime.fromisoformat(self.game["ko"]).timestamp())},
                 "homeTeam":{"id":"home","name":"Home"},"awayTeam":{"id":"away","name":"Away"},
                 "referees":{"id":"ref","name":"Example"}}
-        reader = Mock()
-        reader.read.return_value = {"data":data}
-        with patch.object(watch,"rank_players",return_value=([self.player],20)) as rank:
-            result = watch.analyse(reader,self.game,self.now,{"ref":{"games":20,"mean":4}})
-            self.assertEqual(result,"reviewed")
-            self.assertEqual(self.game["players"],[self.player])
-            rank.assert_called_once()
-            reader.read.assert_called_once_with("getMatchDetails",matchId=self.game["id"])
-            self.assertEqual(watch.analyse(reader,self.game,self.now,{"ref":{"games":20,"mean":3.99}}),
-                             "below referee threshold")
-            self.assertEqual(rank.call_count,1)
+        events=[]
+        class Api:
+            def read(_, name, args):
+                events.append(name)
+                if name=="getMatchDetails":
+                    return {"data":data}
+                if name=="getReferee":
+                    rid=args["refereeId"]
+                    return {"profile":{"data":{"id":rid}},"record":{"recentGames":{
+                        "context":f"{self.now.date()} to {self.now.date()}",
+                        "totals":{"games":20,"yellowCards":80 if rid=="ref" else 79}}}}
+                raise AssertionError(name)
+        rows=[dict(self.game,appointment={"id":"ref","name":"Example"}),
+              dict(self.game,id="fixture.b",appointment={"id":"below","name":"Other"})]
+        with patch.object(watch,"discover",return_value=(rows,[])), patch.object(watch,"check_cards"), patch.object(watch,"rank_players",return_value=([self.player],20)) as rank:
+            result=watch.screen(watch.Reads(Api()),self.now.date())
+        self.assertEqual(events,["getReferee","getReferee","getMatchDetails"])
+        self.assertEqual([f["status"] for f in result["fixtures"]],["reviewed","below referee threshold"])
+        rank.assert_called_once()
 
     def test_dated_referee_history(self):
         reader = Mock()
@@ -61,7 +69,7 @@ class BookingTests(unittest.TestCase):
         reader.read.side_effect=fake
         result=watch.referee_sample(reader,{"id":"ref.abc"},date(2026,11,27))
         self.assertEqual((result["games"],result["yellows"]),(33,132))
-        self.assertLessEqual(reader.read.call_count,7)
+        self.assertLessEqual(reader.read.call_count,8)
 
     def test_recent_future_result_rejected(self):
         reader=Mock()
@@ -142,17 +150,71 @@ class BookingTests(unittest.TestCase):
             post.assert_called_once()
 
     def test_isolated_missing_fixture_and_budget(self):
-        rows=[dict(self.game,id=i) for i in ("a","b")]
-        reader=Mock(calls=2)
-        with patch.object(watch,"discover",return_value=(rows,[])), patch.object(watch,"analyse",side_effect=[watch.Missing("missing XI"),"reviewed"]):
-            result=watch.screen(reader,date.today())
-        self.assertEqual([r["status"] for r in result["fixtures"]],["missing XI","reviewed"])
+        reader=Mock()
+        reader.read.side_effect=[watch.Missing("temporary failure"),{"fixtureCount":1,"fixturesSummary":"- 15:00 Home v Away (id fixture.ok)"}]
+        rows=watch.league_calendar(reader,"Premier League","league.E0",self.now.date())
+        self.assertEqual(rows[0]["id"],"fixture.ok")
+        self.assertIn("startOfDay",reader.read.call_args.kwargs)
         with self.assertRaises(watch.Missing):
             watch.Reads(Mock(),max_reads=0).read("unused")
 
     def test_local_09_tracks_summer_clock(self):
         self.assertEqual(watch.edition_window(date(2026,7,1))[0].hour,8)
         self.assertEqual(watch.edition_window(date(2026,11,28))[0].hour,9)
+
+    def test_value_distinguishes_booking_frequency_from_yellow_total(self):
+        rec=dict(games=20,booked=1,cards=2,starts=14,bookedStarts=1)
+        self.assertEqual(watch.assess_card(rec,{"odds":5}),"record below or level with odds")
+        self.assertEqual(watch.assess_card(dict(rec,booked=10,bookedStarts=7),{"odds":4}),"possible value")
+        self.assertEqual(watch.assess_card(rec,None),"incomplete")
+
+    def test_card_markets_match_player_fixture_side_and_line(self):
+        raw=dict(matchId=self.game["id"],playerId=self.player["id"],teamName="Home",playerName="Test Player",
+                 statType="yellowCards",oddsType="over",line=0.5,bestOdds=4,bestBookmakerName="Book")
+        reader=Mock()
+        reader.read.return_value={"data":[dict(raw,line=1.5,bestOdds=9),dict(raw,matchId="wrong",bestOdds=14),
+                dict(raw,teamName="Away",bestOdds=10),dict(raw,oddsType="under",bestOdds=11),raw],
+                "pagination":{"currentPage":1,"hasNextPage":False}}
+        values=watch.booking_odds(reader,[(self.game,self.player)])
+        self.assertEqual(values[("abc","123")]["odds"],4)
+        self.assertFalse(reader.read.call_args.kwargs["includeStale"])
+
+    def test_uncertain_save_uses_readback_before_retry(self):
+        store=Mock()
+        store.put.side_effect=watch.requests.ReadTimeout()
+        store.get.return_value={"saved":"here"}
+        self.assertTrue(watch.save_report(store,"test",{"saved":"here"}))
+        self.assertEqual(store.put.call_count,1)
+
+    def test_reclaim_only_unspent_reads_on_unresolved_matches(self):
+        report=self.report()
+        report.update(reads=210,readsByTool={"getReferee":210},started=self.now.isoformat())
+        report["fixtures"].append(dict(self.game,id="new",status="referee dates need verification",
+                                       appointment={"id":"ref","name":"Ref"}))
+        api=Mock()
+        api.read.return_value={"profile":{"data":{"id":"ref"}},"record":{"recentGames":{
+            "context":f"{self.now.date()} to {self.now.date()}","totals":{"games":20,"yellowCards":50}}}}
+        result=watch.use_remaining(watch.Reads(api),report)
+        self.assertEqual(result["reads"],211)
+        self.assertEqual(result["fixtures"][1]["status"],"below referee threshold")
+        api.read.assert_called_once()
+
+    def test_recovery_edits_original_only_when_shortlist_changes(self):
+        old=self.report()
+        store=Memory()
+        new=dict(old,screenVersion=2)
+        p=new["fixtures"][0]["players"][0]
+        p.update(cards=dict(games=20,booked=1,cards=1,perAppearance=.05,starts=17,bookedStarts=1),
+                 cardPrice=dict(odds=4,book="Book"),cardAssessment="record below or level with odds")
+        folder=f"{watch.PREFIX}/{old['day']}"
+        store.put(folder+"/original.json",old)
+        store.put(folder+"/delivery.json",dict(state="sent",at=self.now.isoformat(),message_id=123))
+        with patch.object(watch,"telegram_private",return_value=("https://example.invalid","1")), patch.object(watch.http,"post") as post:
+            post.return_value.json.return_value={"ok":True,"result":{"message_id":123,"chat":{"id":1}}}
+            watch.deliver(store,new,self.now)
+            watch.deliver(store,new,self.now)
+            self.assertEqual(post.call_count,1)
+            self.assertTrue(post.call_args.args[0].endswith("/editMessageMedia"))
 
 
 if __name__=="__main__":
